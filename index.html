@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  <div id="cpu">Ready</div>
+  <div id="disk">Ready</div>
+  <div id="memory">Ready</div>
+  <div id="network">Ready</div>
+</body>
+
+<script>
+  window.onload = function() {
+    setInterval(function () {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+            document.getElementById("cpu").innerHTML = xhttp.responseText;
+
+        }
+      };
+
+      xhttp.open('GET', 'http://192.168.0.99:9009/getcpu', true);
+      xhttp.send();
+
+    }, 1000);
+
+    setInterval(function () {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+            document.getElementById("disk").innerHTML = xhttp.responseText;
+
+        }
+      };
+
+      xhttp.open('GET', 'http://192.168.0.99:9009/getdisk', true);
+      xhttp.send();
+
+    }, 1000);
+
+
+    setInterval(function () {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+            document.getElementById("memory").innerHTML = xhttp.responseText;
+
+        }
+      };
+
+      xhttp.open('GET', 'http://192.168.0.99:9009/getmemory', true);
+      xhttp.send();
+
+    }, 1000);
+
+
+    setInterval(function () {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+            document.getElementById("network").innerHTML = xhttp.responseText;
+
+        }
+      };
+
+      xhttp.open('GET', 'http://192.168.0.99:9009/getnetwork', true);
+      xhttp.send();
+
+    }, 1000);
+  }
+
+</script>
+
+</html>
