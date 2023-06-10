@@ -15,59 +15,22 @@
       xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
-            document.getElementById("cpu").innerHTML = xhttp.responseText;
+          var jsonValue = JSON.parse(this.responseText);
 
+          console.log(jsonValue.cpu.percent);
+          console.log(jsonValue.memory.total);
+          console.log(jsonValue.memory.used);
+          console.log(jsonValue.memory.percent);
+          console.log(jsonValue.disk.total);
+          console.log(jsonValue.disk.used);
+          console.log(jsonValue.disk.percent);
+          console.log(jsonValue.network.send);
+          console.log(jsonValue.network.receive);
+          
         }
       };
 
-      xhttp.open('GET', 'http://192.168.0.99:9009/getcpu', true);
-      xhttp.send();
-
-    }, 1000);
-
-    setInterval(function () {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-
-            document.getElementById("disk").innerHTML = xhttp.responseText;
-
-        }
-      };
-
-      xhttp.open('GET', 'http://192.168.0.99:9009/getdisk', true);
-      xhttp.send();
-
-    }, 1000);
-
-
-    setInterval(function () {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-
-            document.getElementById("memory").innerHTML = xhttp.responseText;
-
-        }
-      };
-
-      xhttp.open('GET', 'http://192.168.0.99:9009/getmemory', true);
-      xhttp.send();
-
-    }, 1000);
-
-
-    setInterval(function () {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-
-            document.getElementById("network").innerHTML = xhttp.responseText;
-
-        }
-      };
-
-      xhttp.open('GET', 'http://192.168.0.99:9009/getnetwork', true);
+      xhttp.open('GET', 'http://192.168.0.99:9009/sysinfo', true);
       xhttp.send();
 
     }, 1000);
