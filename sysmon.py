@@ -10,7 +10,18 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-network_total_byte = {'send' : 0, 'receive' : 0}
+
+totalSystemInfo = {
+    'cpu' : {'percent' : 0},
+    'memory' : {'total' : 0, 'used' : 0, 'percent' : 0},
+    'disk' : {'total' : 0, 'used' : 0, 'percent' : 0},
+    'network' : {'send' : 0, 'receive' : 0},
+    }
+
+
+
+#network_total_byte = {'send' : 0, 'receive' : 0}
+
 
 @app.route('/cpu/raw')
 def get_cpu():
@@ -37,7 +48,7 @@ def get_memory():
 @app.route('/network/raw')
 def get_network():
     network_io_counters = psutil.net_io_counters(pernic=True)
-    
+
     print(network_io_counters)
     return json.dumps(network_io_counters)
 
@@ -69,15 +80,52 @@ def poll(interval):
 
       tot_after = psutil.net_io_counters()
      # pnic_after = psutil.net_io_counters(pernic=True)
-      
 
-      network_total_byte['send'] = tot_after.bytes_sent - tot_before.bytes_sent
-      network_total_byte['receive'] = tot_after.bytes_recv - tot_before.bytes_recv
+
+      sendTraffic = tot_after.bytes_sent - tot_before.bytes_sent
+      receiveTraffic = tot_after.bytes_recv - tot_before.bytes_recv
+
+      totalSystemInfo['network']['send'] = sendTraffic
+      totalSystemInfo['network']['receive'] = receiveTraffic
+
 
 interval = 1
 t = threading.Thread(target=poll, args=(interval,))
 t.start()
 
+@app.route('/sysinfo')
+def get_system_infomation():
+
+    # CPU
+    cpuUsed = psutil.cpu_percent()
+    totalSystemInfo['cpu']['percent'] = cpuUsed
+
+    # Memory
+    memory = psutil.virtual_memory()
+
+    for name in memory._fields:
+        value = getattr(memory, name)
+        if name == 'total':
+            totalSystemInfo['memory']['total'] = value
+        elif name == 'used':
+            totalSystemInfo['memory']['used'] = value
+        elif name == 'percent':
+            totalSystemInfo['memory']['percent'] = value
+
+    # Disk
+    disks = psutil.disk_usage('/')
+
+    for name in disks._fields:
+        value = getattr(disks, name)
+        if name == 'total':
+            totalSystemInfo['disk']['total'] = value
+        elif name == 'used':
+            totalSystemInfo['disk']['used'] = value
+        elif name == 'percent':
+            totalSystemInfo['disk']['percent'] = value
+
+
+    return json.dumps(totalSystemInfo)
 
 if __name__ == "__main__":
-    app.run(host='localhost', port="9009")
+    app.run(host='192.168.0.99', port="9009")
