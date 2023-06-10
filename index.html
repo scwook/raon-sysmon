@@ -2,10 +2,23 @@
 <html>
 
 <body>
-  <div id="cpu">Ready</div>
-  <div id="disk">Ready</div>
-  <div id="memory">Ready</div>
-  <div id="network">Ready</div>
+  <div id="cpu">
+    <p>Percent : </p><p id="cpu-percent">0</p>
+  </div>
+  <div id="disk">
+    <p>Total : </p><p id="disk-total">0</p>
+    <p>Used : </p><p id="disk-used">0</p>
+    <p>Percent : </p><p id="disk-percent">0</p>
+  </div>
+  <div id="memory">
+    <p>Total : </p><p id="memory-total">0</p>
+    <p>Used : </p><p id="memory-used">0</p>
+    <p>Percent : </p><p id="memory-percent">0</p>
+  </div>
+  <div id="network">
+    <p>Send : </p><p id="network-send">0</p>
+    <p>Receive : </p><p id="network-receive">0</p>
+  </div>
 </body>
 
 <script>
@@ -17,15 +30,29 @@
 
           var jsonValue = JSON.parse(this.responseText);
 
-          console.log(jsonValue.cpu.percent);
-          console.log(jsonValue.memory.total);
-          console.log(jsonValue.memory.used);
-          console.log(jsonValue.memory.percent);
-          console.log(jsonValue.disk.total);
-          console.log(jsonValue.disk.used);
-          console.log(jsonValue.disk.percent);
-          console.log(jsonValue.network.send);
-          console.log(jsonValue.network.receive);
+          document.getElementById("cpu-percent").innerHTML = jsonValue.cpu.percent;
+
+          document.getElementById("memory-total").innerHTML = jsonValue.memory.total;
+          document.getElementById("memory-used").innerHTML = jsonValue.memory.used;
+          document.getElementById("memory-percent").innerHTML = jsonValue.memory.percent;
+
+          document.getElementById("disk-total").innerHTML = jsonValue.disk.total;
+          document.getElementById("disk-used").innerHTML = jsonValue.disk.used;
+          document.getElementById("disk-percent").innerHTML = jsonValue.disk.percent;
+          
+          document.getElementById("network-send").innerHTML = jsonValue.network.send;
+          document.getElementById("network-receive").innerHTML = jsonValue.network.receive;
+
+
+          // console.log(jsonValue.cpu.percent);
+          // console.log(jsonValue.memory.total);
+          // console.log(jsonValue.memory.used);
+          // console.log(jsonValue.memory.percent);
+          // console.log(jsonValue.disk.total);
+          // console.log(jsonValue.disk.used);
+          // console.log(jsonValue.disk.percent);
+          // console.log(jsonValue.network.send);
+          // console.log(jsonValue.network.receive);
           
         }
       };
