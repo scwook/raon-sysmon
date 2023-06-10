@@ -3,6 +3,7 @@ import json
 import psutil
 import time
 import threading
+import datetime
 
 from flask import Flask
 from flask_cors import CORS
@@ -17,11 +18,6 @@ totalSystemInfo = {
     'disk' : {'total' : 0, 'used' : 0, 'percent' : 0},
     'network' : {'send' : 0, 'receive' : 0},
     }
-
-
-
-#network_total_byte = {'send' : 0, 'receive' : 0}
-
 
 @app.route('/cpu/raw')
 def get_cpu():
@@ -62,11 +58,17 @@ def get_temperature():
     print(temperature)
     return json.dumps(temperature)
 
+@app.route('/datetime')
+def get_datetime():
+    current_datetime = {'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-@app.route('/network/traffic')
-def get_network_traffic():
+    return json.dumps(current_datetime)
 
-    return json.dumps(network_total_byte)
+
+# @app.route('/network/raw')
+# def get_network_traffic():
+
+#     return json.dumps(network_total_byte)
 
 
 def poll(interval):
