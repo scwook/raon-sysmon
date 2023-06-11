@@ -331,10 +331,10 @@
         window.scl32Chart = new Chart(scl32ChartContext, scl32CharConfig);
 
         function scl32DataOnRefresh(chart) {
-            var pValue = networkSend * 1000000;
+            var pValue = networkSend / 1000000;
             pValue = pValue.toFixed(1);
 
-            var sValue = networkReceive * 1000000;
+            var sValue = networkReceive / 1000000;
             sValue = sValue.toFixed(1);
 
             chart.config.data.datasets[0].data.push({
