@@ -22,7 +22,6 @@ totalSystemInfo = {
 @app.route('/cpu/raw')
 def get_cpu():
     cpu_percent_percpu = psutil.cpu_percent(interval=1, percpu=True)
-    cpu_percent = psutil.cpu_percent(interval=1)
 
     print(cpu_percent_percpu)
     return json.dumps(cpu_percent_percpu)
@@ -60,7 +59,7 @@ def get_temperature():
 
 @app.route('/datetime')
 def get_datetime():
-    current_datetime = {'datetime' : datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+    current_datetime = {'datetime' : datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
     return json.dumps(current_datetime)
 
