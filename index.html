@@ -1,222 +1,353 @@
 <!DOCTYPE html>
 <html>
+<script src="./script/moment.js"></script>
+<script src="./script/chart.js@2.8.0"></script>
+<script src="./script/chartjs-plugin-streaming.js"></script>
+
 <style>
-  #contain1 {
-    position: relative;
-    width: 174px;
-    height: 174px;
-    transform: rotate(-90deg);
-    margin: auto;
-  }
-
-  #contain1-bg {
-    stroke-dashoffset: 0;
-    stroke: rgba(0, 84, 188, 0.3);
-    transform: translate(7px, 7px);
-    stroke-width: 14;
-  }
-
-  #contain1-fg {
-    stroke: var(--color);
-    stroke-width: 14;
-    stroke-linecap: round;
-    stroke-dasharray: 503;
-    stroke-dashoffset: 503;
-    transform: translate(7px, 7px);
-  }
-
-  .title {
-    color: blue;
-    font-size: 30px;
-    text-align: center;
-    /* font-family: Roboto-Thin; */
-    line-height: 0.0;
-    /* background-color: tomato; */
-  }
-
-  .doughnutChartText {
-    position: absolute;
-    width: 100%;
-    top: 120px;
-    color: white;
-    font-size: 30px;
-    text-align: center;
-  }
-
-  .doughnutChartTextUnder {
-    position: absolute;
-    width: 100%;
-    top: 155px;
-    color: gray;
-    font-size: 18px;
-    text-align: center;
-  }
+    .grid-item {
+        position: relative;
+        margin: 10px;
+        /* background-color: rgba(50, 50, 50, 0.3); */
+        z-index: -2;
+    }
+    
+    .grid-1x1 {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .title {
+        color: blue;
+        font-size: 30px;
+        text-align: center;
+        /* font-family: Roboto-Thin; */
+        line-height: 0.0;
+        /* background-color: tomato; */
+    }
+    
+    .doughnut-contain {
+        position: relative;
+        width: 174px;
+        height: 174px;
+        transform: rotate(-90deg);
+        margin: auto;
+    }
+    
+    .doughnutBackground {
+        stroke-dashoffset: 0;
+        stroke: rgba(0, 84, 188, 0.3);
+        transform: translate(7px, 7px);
+        stroke-width: 14;
+    }
+    
+    .doughnutChartText {
+        position: absolute;
+        width: 100%;
+        top: 120px;
+        color: blue;
+        font-size: 30px;
+        text-align: center;
+    }
+    
+    .doughnutChartTextUnder {
+        position: absolute;
+        width: 100%;
+        top: 155px;
+        color: gray;
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    #storage-chart {
+        stroke: var(--doughuntColor);
+        stroke-width: 14;
+        stroke-linecap: round;
+        stroke-dasharray: 503;
+        stroke-dashoffset: 503;
+        transform: translate(7px, 7px);
+        /* animation-timing-function: ease-out; */
+        /* animation-fill-mode: forwards; */
+    }
 </style>
 
 <body>
-  <div id="contain1" style="background-color: blanchedalmond;">
-    <p class="title">Storage</p>
-    <div id="storage-value" class="doughnutChartText">0</div>
-    <div class="doughnutChartTextUnder">100TB</div>
+    <div class="grid-item grid-1x1">
+        <p class="title">Storage</p>
+        <div id="storage-value" class="doughnutChartText">0</div>
+        <div class="doughnutChartTextUnder">100TB</div>
 
-    <svg width="176" height="176" style="fill:none">
-      <circle id="contain1-bg" cx="80" cy="80" r="80" />
-      <circle id="contain1-fg" cx="80" cy="80" r="80" style="--color:#00ace6;" />
-    </svg>
-  </div>
+        <div class="doughnut-contain">
+            <svg width="176" height="176" style="fill:none">
+              <circle class="doughnutBackground" cx="80" cy="80" r="80" />
+              <circle id="storage-chart" cx="80" cy="80" r="80" style="--doughuntColor:#00ace6;" />
+          </svg>
+        </div>
+    </div>
 
-  <div id="cpu">
-    <span>Percent : </span><span id="cpu-percent">0</span>
-  </div>
-  <div id="disk">
-    <span>Total : </span><span id="disk-total">0</span>
-    <span>Used : </span><span id="disk-used">0</span>
-    <span>Percent : </span><span id="disk-percent">0</span>
-  </div>
-  <div id="memory">
-    <span>Total : </span><span id="memory-total">0</span>
-    <span>Used : </span><span id="memory-used">0</span>
-    <span>Percent : </span><span id="memory-percent">0</span>
-  </div>
-  <div id="network">
-    <span>Send : </span><span id="network-send">0</span>
-    <span>Receive : </span><span id="network-receive">0</span>
-  </div>
+    <div id="cpu">
+        <span>Percent : </span><span id="cpu-percent">0</span>
+    </div>
+    <div id="disk">
+        <span>Total : </span><span id="disk-total">0</span>
+        <span>Used : </span><span id="disk-used">0</span>
+        <span>Percent : </span><span id="disk-percent">0</span>
+    </div>
+    <div id="memory">
+        <span>Total : </span><span id="memory-total">0</span>
+        <span>Used : </span><span id="memory-used">0</span>
+        <span>Percent : </span><span id="memory-percent">0</span>
+    </div>
+    <div id="network">
+        <span>Send : </span><span id="network-send">0</span>
+        <span>Receive : </span><span id="network-receive">0</span>
+    </div>
+
+    <div style="width:580px; height:280px;">
+        <canvas id="scl32-network"></canvas>
+    </div>
 </body>
 
 <script>
+    var storageIntervalID;
+    var networkSend = 0
+    var networkReceive = 0;
 
-  var contain1ID;
+    window.onload = function() {
 
-  window.onload = function () {
+        var storageChartID = document.getElementById('storage-chart');
+        storageChartID.style.strokeDashoffset = '503';
 
-    var fgID1 = document.getElementById('contain1-fg');
-    fgID1.style.strokeDashoffset = '503';
+        simulation_network();
 
-    setInterval(function () {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
+        setInterval(function() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
 
-          var jsonValue = JSON.parse(this.responseText);
+                    var jsonValue = JSON.parse(this.responseText);
 
-          document.getElementById("cpu-percent").innerHTML = jsonValue.cpu.percent;
+                    document.getElementById("cpu-percent").innerHTML = jsonValue.cpu.percent;
 
-          document.getElementById("memory-total").innerHTML = jsonValue.memory.total;
-          document.getElementById("memory-used").innerHTML = jsonValue.memory.used;
-          document.getElementById("memory-percent").innerHTML = jsonValue.memory.percent;
+                    document.getElementById("memory-total").innerHTML = jsonValue.memory.total;
+                    document.getElementById("memory-used").innerHTML = jsonValue.memory.used;
+                    document.getElementById("memory-percent").innerHTML = jsonValue.memory.percent;
 
-          document.getElementById("disk-total").innerHTML = jsonValue.disk.total;
-          document.getElementById("disk-used").innerHTML = jsonValue.disk.used;
-          document.getElementById("disk-percent").innerHTML = jsonValue.disk.percent;
+                    document.getElementById("disk-total").innerHTML = jsonValue.disk.total;
+                    document.getElementById("disk-used").innerHTML = jsonValue.disk.used;
+                    document.getElementById("disk-percent").innerHTML = jsonValue.disk.percent;
 
-          document.getElementById("network-send").innerHTML = jsonValue.network.send;
-          document.getElementById("network-receive").innerHTML = jsonValue.network.receive;
+                    document.getElementById("network-send").innerHTML = jsonValue.network.send;
+                    document.getElementById("network-receive").innerHTML = jsonValue.network.receive;
 
+                    networkSend = jsonValue.network.send;
+                    networkReceive = jsonValue.network.receive;
+                    // console.log(jsonValue.cpu.percent);
+                    // console.log(jsonValue.memory.total);
+                    // console.log(jsonValue.memory.used);
+                    // console.log(jsonValue.memory.percent);
+                    // console.log(jsonValue.disk.total);
+                    // console.log(jsonValue.disk.used);
+                    // console.log(jsonValue.disk.percent);
+                    // console.log(jsonValue.network.send);
+                    // console.log(jsonValue.network.receive);
 
-          // console.log(jsonValue.cpu.percent);
-          // console.log(jsonValue.memory.total);
-          // console.log(jsonValue.memory.used);
-          // console.log(jsonValue.memory.percent);
-          // console.log(jsonValue.disk.total);
-          // console.log(jsonValue.disk.used);
-          // console.log(jsonValue.disk.percent);
-          // console.log(jsonValue.network.send);
-          // console.log(jsonValue.network.receive);
+                }
+            };
 
+            xhttp.open('GET', 'http://192.168.0.99:9009/sysinfo', true);
+            xhttp.send();
+
+        }, 1000);
+    }
+
+    function simulation_chart() {
+        var chartMaxLength = Math.ceil(2 * Math.PI * 80); // L = 2 * PI * Radius
+
+        // Storage
+        storageIntervalID = setInterval(function() {
+
+            var maxValue = 100;
+            var randomValue = Math.random() * maxValue;
+            var valueToOffset = Math.floor(chartMaxLength - chartMaxLength / maxValue * randomValue);
+
+            var storageValueID = document.getElementById('storage-value');
+            storageValueID.innerText = Math.floor(randomValue) + 'TB';
+
+            var fgID = document.getElementById('storage-chart');
+            var currentDashOffset = parseInt(fgID.style.strokeDashoffset);
+
+            var sign = valueToOffset - currentDashOffset;
+
+            var dir = 0;
+            if (sign > 0) {
+                dir = -1; // anitclockwise, increase offset value
+            } else if (sign < 0) {
+                dir = 1; // clockwise, decrease offset value
+            }
+
+            if (dir == 0) {
+                return;
+            }
+
+            var duration = 2000;
+            var interval = 10;
+            var count = 0;
+            var maxCount = Math.floor(duration / interval);
+            var x1 = 0.0;
+            var x2 = 1.0;
+            var dx = Math.abs(x1 - x2) / maxCount;
+            var x = 0.0;
+            var y = 0;
+            var y1 = (dir == 1) ? valueToOffset : currentDashOffset;
+            var y2 = (dir == 1) ? currentDashOffset : valueToOffset;
+            var a = Math.abs(currentDashOffset - valueToOffset);
+            var b = y1;
+
+            var id = setInterval(function() {
+
+                switch (dir) {
+                    case 1:
+                        y = a * Math.pow(2, -10 * x) + y1;
+                        break;
+
+                    case -1:
+                        y = a * (1 - Math.pow(2, -10 * x)) + y1;
+
+                        break;
+
+                    default:
+                        count = maxCount; // 
+                }
+
+                fgID.style.strokeDashoffset = Math.floor(y);
+
+                x += dx;
+                count += 1;
+
+                if (count == maxCount) {
+                    clearInterval(id);
+                }
+
+            }, interval);
+        }, 6000);
+    }
+
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            // tab is now inactive
+            // temporarily clear timer using clearInterval() / clearTimeout()
+            clearInterval(storageIntervalID);
+        } else {
+            // tab is active again
+            // restart timers
+            simulation_chart()
         }
-      };
+    });
 
-      xhttp.open('GET', 'http://192.168.0.99:9009/sysinfo', true);
-      xhttp.send();
-
-    }, 1000);
-  }
-
-  function contain1() {
-    var chartMaxLength = Math.ceil(2 * Math.PI * 80); // L = 2 * PI * Radius
-
-    var fgID = document.getElementById('contain1-fg');
-
-    // Storage
-    var maxValue = 100;
-    var randomValue = Math.random() * maxValue;
-
-    var valueToOffset = Math.floor(chartMaxLength - chartMaxLength / maxValue * randomValue);
+    var chartColors = {
+        red: 'rgb(255, 99, 132)',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: 'rgb(75, 192, 192)',
+        blue: 'rgb(54, 162, 235)',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(201, 203, 207)'
+    };
 
 
-    var fgID = document.getElementById('contain1-fg');
-    var currentDashOffset = parseInt(fgID.style.strokeDashoffset);
-    var sign = valueToOffset - currentDashOffset;
+    function simulation_network() {
 
-    var dir = 0;
-    if (sign > 0) {
-      dir = -1; // anitclockwise, increase offset value
-    } else if (sign < 0) {
-      dir = 1; // clockwise, decrease offset value
+        // SCL3, SCL2 Vlan 30, 20
+        var scl32CharConfig = {
+            // var color = Chart.helpers.color;
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Primary',
+                    // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.red,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    data: [],
+                }, {
+                    label: 'Secondary',
+                    // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.blue,
+                    fill: false,
+                    cubicInterpolationMode: 'monotone',
+                    data: [],
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'SCL3,2 Main Network Uplink'
+                },
+                legend: {
+                    display: false
+                },
+                layout: {
+                    padding: {
+                        bottom: 10
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'realtime',
+                        realtime: {
+                            duration: 60000,
+                            refresh: 1000,
+                            delay: 2000,
+                            onRefresh: scl32DataOnRefresh
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'value'
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                },
+                tooltips: {
+                    mode: 'nearest',
+                    intersect: false
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: false
+                }
+            }
+        };
+
+
+        var scl32ChartContext = document.getElementById('scl32-network').getContext('2d');
+        window.scl32Chart = new Chart(scl32ChartContext, scl32CharConfig);
+
+        function scl32DataOnRefresh(chart) {
+            var pValue = networkSend * 1000000;
+            pValue = pValue.toFixed(1);
+
+            var sValue = networkReceive * 1000000;
+            sValue = sValue.toFixed(1);
+
+            chart.config.data.datasets[0].data.push({
+                x: Date.now(),
+                y: pValue
+            });
+
+            chart.config.data.datasets[1].data.push({
+                x: Date.now(),
+                y: sValue
+            });
+        }
     }
-
-    if (dir == 0) {
-      return;
-    }
-
-    var duration = 2000;
-    var interval = 10;
-    var count = 0;
-    var maxCount = Math.floor(duration / interval);
-    var x1 = 0.0;
-    var x2 = 1.0;
-    var dx = Math.abs(x1 - x2) / maxCount;
-    var x = 0.0;
-    var y = 0;
-    var y1 = (dir == 1) ? valueToOffset : currentDashOffset;
-    var y2 = (dir == 1) ? currentDashOffset : valueToOffset;
-    var a = Math.abs(currentDashOffset - valueToOffset);
-    var b = y1;
-
-    var id = setInterval(function () {
-
-      switch (dir) {
-        case 1:
-          y = a * Math.pow(2, -10 * x) + y1;
-          break;
-
-        case -1:
-          y = a * (1 - Math.pow(2, -10 * x)) + y1;
-
-          break;
-
-        default:
-          count = maxCount; // 
-      }
-
-      fgID.style.strokeDashoffset = Math.floor(y);
-
-      x += dx;
-      count += 1;
-
-      if (count == maxCount) {
-        clearInterval(id);
-      }
-
-    }, interval);
-
-  }
-
-
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) {
-      // tab is now inactive
-      // temporarily clear timer using clearInterval() / clearTimeout()
-      clearInterval(contain1ID);
-    }
-    else {
-      // tab is active again
-      // restart timers
-      contain1ID = setInterval(contain1, 3000);
-    }
-  });
-
 </script>
 
 </html>
