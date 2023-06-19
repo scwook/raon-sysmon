@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+</body>
+<script>
+    var queryCommand =
+    {
+        "dialect": {
+            "annotations": [
+                "group"
+            ],
+            "commentPrefix": "#",
+            "dateTimeFormat": "RFC3339",
+            "delimiter": ",",
+            "header": true
+        },
+        "now": "2023-06-19T13:30:22Z",
+        "params": {"mybucket":"control", "rangeStart":"-5m"},
+        "query": "from(bucket:params.mybucket)|>range(start:params.rangeStart)|>filter(fn:(r)=>r._measurement=='cpu'",
+        "type": "flux"
+    };
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+            var jsonValue = JSON.parse(this.responseText);
+            console.log(jsonValue);
+        }
+    };
+
+    // xhttp.open('GET', 'http://192.168.60.123:8086/api/v2/buckets?limit=1&offset=50', true);
+    // xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==")
+    // xhttp.send();
+
+    xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/query?org=raon', true);
+    xhttp.setRequestHeader('Content-Type', 'application/json');
+    xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==")
+
+    // xhttp.send(JSON.stringify(queryCommand));
+    xhttp.send(queryCommand);
+
+</script>
+
+</html>

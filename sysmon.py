@@ -129,4 +129,4 @@ def get_system_infomation():
     return json.dumps(totalSystemInfo)
 
 if __name__ == "__main__":
-    app.run(host='192.168.0.99', port="9009")
+    app.run(host='localhost', port="9009")

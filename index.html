@@ -5,18 +5,28 @@
 <script src="./script/chartjs-plugin-streaming.js"></script>
 
 <style>
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(6, 280px);
+        grid-template-rows: repeat(3, 280px);
+        gap: 20px 20px;
+        width: 1800px;
+        height: 930px;
+        /* background-color: wheat; */
+    }
+
     .grid-item {
         position: relative;
         margin: 10px;
         /* background-color: rgba(50, 50, 50, 0.3); */
         z-index: -2;
     }
-    
+
     .grid-1x1 {
         width: 280px;
         height: 280px;
     }
-    
+
     .title {
         color: blue;
         font-size: 30px;
@@ -25,7 +35,7 @@
         line-height: 0.0;
         /* background-color: tomato; */
     }
-    
+
     .doughnut-contain {
         position: relative;
         width: 174px;
@@ -33,14 +43,14 @@
         transform: rotate(-90deg);
         margin: auto;
     }
-    
+
     .doughnutBackground {
         stroke-dashoffset: 0;
         stroke: rgba(0, 84, 188, 0.3);
         transform: translate(7px, 7px);
         stroke-width: 14;
     }
-    
+
     .doughnutChartText {
         position: absolute;
         width: 100%;
@@ -49,7 +59,7 @@
         font-size: 30px;
         text-align: center;
     }
-    
+
     .doughnutChartTextUnder {
         position: absolute;
         width: 100%;
@@ -58,7 +68,7 @@
         font-size: 18px;
         text-align: center;
     }
-    
+
     #storage-chart {
         stroke: var(--doughuntColor);
         stroke-width: 14;
@@ -79,9 +89,9 @@
 
         <div class="doughnut-contain">
             <svg width="176" height="176" style="fill:none">
-              <circle class="doughnutBackground" cx="80" cy="80" r="80" />
-              <circle id="storage-chart" cx="80" cy="80" r="80" style="--doughuntColor:#00ace6;" />
-          </svg>
+                <circle class="doughnutBackground" cx="80" cy="80" r="80" />
+                <circle id="storage-chart" cx="80" cy="80" r="80" style="--doughuntColor:#00ace6;" />
+            </svg>
         </div>
     </div>
 
@@ -113,16 +123,16 @@
     var networkSend = 0
     var networkReceive = 0;
 
-    window.onload = function() {
+    window.onload = function () {
 
         var storageChartID = document.getElementById('storage-chart');
         storageChartID.style.strokeDashoffset = '503';
 
         simulation_network();
 
-        setInterval(function() {
+        setInterval(function () {
             var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
+            xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
 
                     var jsonValue = JSON.parse(this.responseText);
@@ -165,7 +175,7 @@
         var chartMaxLength = Math.ceil(2 * Math.PI * 80); // L = 2 * PI * Radius
 
         // Storage
-        storageIntervalID = setInterval(function() {
+        storageIntervalID = setInterval(function () {
 
             var maxValue = 100;
             var randomValue = Math.random() * maxValue;
@@ -204,7 +214,7 @@
             var a = Math.abs(currentDashOffset - valueToOffset);
             var b = y1;
 
-            var id = setInterval(function() {
+            var id = setInterval(function () {
 
                 switch (dir) {
                     case 1:
@@ -233,7 +243,7 @@
         }, 6000);
     }
 
-    document.addEventListener('visibilitychange', function() {
+    document.addEventListener('visibilitychange', function () {
         if (document.hidden) {
             // tab is now inactive
             // temporarily clear timer using clearInterval() / clearTimeout()
@@ -296,7 +306,7 @@
                     xAxes: [{
                         type: 'realtime',
                         realtime: {
-                            duration: 60000,
+                            duration: 600000,
                             refresh: 1000,
                             delay: 2000,
                             onRefresh: scl32DataOnRefresh
@@ -331,10 +341,12 @@
         window.scl32Chart = new Chart(scl32ChartContext, scl32CharConfig);
 
         function scl32DataOnRefresh(chart) {
-            var pValue = networkSend / 1000000;
+            var pValue = Math.floor(Math.random() * 10);
+            // var pValue = networkSend / 1000000;
             pValue = pValue.toFixed(1);
 
-            var sValue = networkReceive / 1000000;
+            var sValue = Math.floor(Math.floor() * 10);
+            // var sValue = networkReceive / 1000000;
             sValue = sValue.toFixed(1);
 
             chart.config.data.datasets[0].data.push({
