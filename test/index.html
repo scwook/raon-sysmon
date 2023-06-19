@@ -16,7 +16,7 @@
             "delimiter": ",",
             "header": true
         },
-        "now": "2023-06-19T13:30:22Z",
+        "now": "2023-06-19T14:22:22Z",
         "params": {"mybucket":"control", "rangeStart":"-5m"},
         "query": "from(bucket:params.mybucket)|>range(start:params.rangeStart)|>filter(fn:(r)=>r._measurement=='cpu'",
         "type": "flux"
