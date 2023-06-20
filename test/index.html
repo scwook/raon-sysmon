@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html>
-
+<div id = "cpu"></div>
 <body>
 
 </body>
 <script>
-    var queryCommand =
+    var dataArray = [];
+
+    var date = new Date();
+    var timezone = "+00:00";
+    var isoTime = date.toISOString().replace('Z', timezone);
+
+    console.log(isoTime);
+
+    var querString = 'from(bucket: "control") \
+    |> range(start: -1m) \
+    |> filter(fn: (r) => r["_measurement"] == "cpu") \
+    |> filter(fn: (r) => r["_field"] == "usage_system" or r["_field"] == "usage_user") \
+    |> filter(fn: (r) => r["cpu"] == "cpu-total") \
+    |> last()';
+    // |> limit(n:1, offset: 3)';
+
+
+    var queryData =
     {
         "dialect": {
             "annotations": [
@@ -16,31 +33,61 @@
             "delimiter": ",",
             "header": true
         },
-        "now": "2023-06-19T14:22:22Z",
-        "params": {"mybucket":"control", "rangeStart":"-5m"},
-        "query": "from(bucket:params.mybucket)|>range(start:params.rangeStart)|>filter(fn:(r)=>r._measurement=='cpu'",
+        "now": isoTime,
+        "params": {},
+        "query": querString,
         "type": "flux"
     };
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-
-            var jsonValue = JSON.parse(this.responseText);
-            console.log(jsonValue);
-        }
+    var createBucket =
+    {
+        "description": "HTTP API Test Bucket",
+        "name": "testBucket",
+        "orgID": "c4c69c86feb77656",
+        "retentionRules": [
+            {
+                "everySeconds": 86400,
+                "shardGroupDurationSeconds": 0,
+                "type": "expire"
+            }
+        ],
+        "rp": "0",
+        "schemaType": "implicit"
     };
 
-    // xhttp.open('GET', 'http://192.168.60.123:8086/api/v2/buckets?limit=1&offset=50', true);
-    // xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==")
-    // xhttp.send();
 
-    xhttp.open('POST', 'http://192.168.0.99:8086/api/v2/query?org=ctrluser', true);
-    xhttp.setRequestHeader('Content-Type', 'application/json');
-    // xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==") // RAON
-    xhttp.setRequestHeader("Authorization", "Token 6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog==") // HOME
-    // xhttp.send(JSON.stringify(queryCommand));
-    xhttp.send(queryCommand);
+    setInterval(function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                // var jsonValue = JSON.parse(this.responseText);
+                console.log(this.responseText);
+                dataArray = this.responseText.split(",");
+                console.log(dataArray);
+                var cpuTotalPercent = parseFloat(dataArray[26]) + parseFloat(dataArray[36]);
+                console.log(cpuTotalPercent);
+                document.getElementById('cpu').innerText = cpuTotalPercent.toFixed(1);
+            }
+        };
+
+        // xhttp.open('GET', 'http://192.168.60.123:8086/api/v2/buckets?limit=1&offset=50', true);
+        // xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==")
+        // xhttp.send();
+
+        xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/query?org=raon', true);
+        // xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/buckets', true);
+
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==") // RAON
+        // xhttp.setRequestHeader("Authorization", "Token 6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog==") // HOME
+        xhttp.send(JSON.stringify(queryData));
+        // xhttp.send(createBucket);
+        date = new Date();
+        isoTime = date.toISOString().replace('Z', timezone);
+        queryData.now = isoTime;
+        console.log(isoTime);
+    }, 5000);
 
 </script>
 
