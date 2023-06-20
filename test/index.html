@@ -11,16 +11,31 @@
     var timezone = "+00:00";
     var isoTime = date.toISOString().replace('Z', timezone);
 
-    console.log(isoTime);
-
-    var querString = 'from(bucket: "control") \
+    var cpuQuery = 'from(bucket: "control") \
     |> range(start: -1m) \
     |> filter(fn: (r) => r["_measurement"] == "cpu") \
     |> filter(fn: (r) => r["_field"] == "usage_system" or r["_field"] == "usage_user") \
     |> filter(fn: (r) => r["cpu"] == "cpu-total") \
     |> last()';
-    // |> limit(n:1, offset: 3)';
 
+    var diskQuery = 'from(bucket: "control") \
+    |> range(start: -1m) \
+    |> filter(fn: (r) => r["_measurement"] == "disk") \
+    |> filter(fn: (r) => r["_field"] == "used_percent" or r["_field"] == "used") \
+    |> last()';
+
+    var memoryQuery = 'from(bucket: "control") \
+    |> range(start: -1m) \
+    |> filter(fn: (r) => r["_measurement"] == "mem") \
+    |> filter(fn: (r) => r["_field"] == "used" or r["_field"] == "used_percent" or r["_field"] == "total") \
+    |> last()';
+
+
+    var networkQuery = 'from(bucket: "control") \
+    |> range(start: -1m) \
+    |> filter(fn: (r) => r["_measurement"] == "net") \
+    |> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent") \
+    |> last()';
 
     var queryData =
     {
@@ -35,26 +50,9 @@
         },
         "now": isoTime,
         "params": {},
-        "query": querString,
+        "query": cpuQuery,
         "type": "flux"
     };
-
-    var createBucket =
-    {
-        "description": "HTTP API Test Bucket",
-        "name": "testBucket",
-        "orgID": "c4c69c86feb77656",
-        "retentionRules": [
-            {
-                "everySeconds": 86400,
-                "shardGroupDurationSeconds": 0,
-                "type": "expire"
-            }
-        ],
-        "rp": "0",
-        "schemaType": "implicit"
-    };
-
 
     setInterval(function () {
         var xhttp = new XMLHttpRequest();
@@ -71,12 +69,7 @@
             }
         };
 
-        // xhttp.open('GET', 'http://192.168.60.123:8086/api/v2/buckets?limit=1&offset=50', true);
-        // xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==")
-        // xhttp.send();
-
         xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/query?org=raon', true);
-        // xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/buckets', true);
 
         xhttp.setRequestHeader('Content-Type', 'application/json');
         xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==") // RAON
