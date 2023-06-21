@@ -1,0 +1,143 @@
+:root {
+    --background-image-top: 0px;
+}
+
+@font-face {
+    font-family: "Helvetica-Neue-Light";
+    src: url(fonts/helveticaneue/HelveticaNeueLight.ttf);
+}
+
+@font-face {
+    font-family: "Roboto-Thin";
+    src: url(fonts/Roboto-Thin.ttf);
+}
+
+@font-face {
+    font-family: "Roboto-Light";
+    src: url(fonts/Roboto-Light.ttf);
+}
+
+@font-face {
+    font-family: "NotoSansKR-Thin";
+    src: url(fonts/NotoSansKR-Thin.otf);
+}
+
+body {
+    margin: 0px;
+    background-color: black;
+    background-image: url('images/shadowbg.png');
+    background-repeat: no-repeat;
+    background-position: center var(--background-image-top);
+    font-family: "Roboto-Thin";
+    overflow: hidden;
+}
+
+#time-stamp {
+    position: absolute;
+    color: white;
+    font-family: "Roboto-Thin";
+    font-size: 48px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -70%);
+}
+
+#under-line {
+    position: absolute;
+    top: 40px;
+}
+
+.under-line-style {
+    fill: none;
+    stroke: #f3f3f3;
+    stroke-miterlimit: 10;
+    stroke-width: 2px;
+}
+
+#center-top {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+#raon-box {
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    width: 133px;
+    z-index: 100;
+}
+
+#accelerator-control {
+    position: absolute;
+    color: white;
+    width: 150px;
+    left: 150px;
+    top: 40px;
+    font-family: "Helvetica-Neue-Light";
+    letter-spacing: 2px;
+    z-index: 100;
+}
+
+#accelerator-control a {
+    text-decoration: none;
+}
+
+#accelerator-control a:link, a:visited {
+    color: white;
+}
+
+.secret-menu {
+    visibility: hidden;
+}
+
+#left-menu {
+    display: flex;
+    position: absolute;
+    width: 700px;
+    height: 80px;
+    left: 50px;
+    justify-content: space-evenly;
+    color: white;
+    font-size: 18px;
+    /* background-color: dodgerblue; */
+}
+
+#left-menu a {
+    margin: auto;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+#left-menu a:link, a:visited {
+    color: white;
+}
+
+#left-menu a:hover {
+    transform: scale(1.3);
+}
+
+#right-menu {
+    display: flex;
+    position: absolute;
+    width: 700px;
+    height: 80px;
+    left: 1200px;
+    justify-content: space-evenly;
+    color: white;
+    font-size: 18px;
+}
+
+#right-menu a {
+    margin: auto;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+#right-menu a:link, a:visited {
+    color: white;
+}
+
+#right-menu a:hover {
+    transform: scale(1.3);
+}

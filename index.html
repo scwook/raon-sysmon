@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" type="text/css" href="index.css">
+
 <script src="./script/moment.js"></script>
 <script src="./script/chart.js@2.8.0"></script>
 <script src="./script/chartjs-plugin-streaming.js"></script>
@@ -77,12 +79,21 @@
         stroke-dashoffset: 503;
         transform: translate(7px, 7px);
         /* animation-timing-function: ease-out; */
-        /* animation-fill-mode: forwards; */
+        animation-fill-mode: forwards;
     }
 </style>
 
 <body>
-    <div class="grid-item grid-1x1">
+    <div style="margin:auto; position: relative; width:1920px; height:80px;">
+        <div id="time-stamp"></div>
+        <div id="raon-box"><a href="main.html"><img width="133.7666" height="33.8293" src="images/raon-white.svg"></a>
+        </div>
+        <div id="accelerator-control">CS</div>
+    </div>
+
+
+
+    <!-- <div class="grid-item grid-1x1">
         <p class="title">Storage</p>
         <div id="storage-value" class="doughnutChartText">0</div>
         <div class="doughnutChartTextUnder">100TB</div>
@@ -115,7 +126,7 @@
 
     <div style="width:580px; height:280px;">
         <canvas id="scl32-network"></canvas>
-    </div>
+    </div> -->
 </body>
 
 <script>
@@ -125,50 +136,10 @@
 
     window.onload = function () {
 
-        var storageChartID = document.getElementById('storage-chart');
-        storageChartID.style.strokeDashoffset = '503';
+        // var storageChartID = document.getElementById('storage-chart');
+        // storageChartID.style.strokeDashoffset = '503';
 
-        simulation_network();
-
-        setInterval(function () {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-
-                    var jsonValue = JSON.parse(this.responseText);
-
-                    document.getElementById("cpu-percent").innerHTML = jsonValue.cpu.percent;
-
-                    document.getElementById("memory-total").innerHTML = jsonValue.memory.total;
-                    document.getElementById("memory-used").innerHTML = jsonValue.memory.used;
-                    document.getElementById("memory-percent").innerHTML = jsonValue.memory.percent;
-
-                    document.getElementById("disk-total").innerHTML = jsonValue.disk.total;
-                    document.getElementById("disk-used").innerHTML = jsonValue.disk.used;
-                    document.getElementById("disk-percent").innerHTML = jsonValue.disk.percent;
-
-                    document.getElementById("network-send").innerHTML = jsonValue.network.send;
-                    document.getElementById("network-receive").innerHTML = jsonValue.network.receive;
-
-                    networkSend = jsonValue.network.send;
-                    networkReceive = jsonValue.network.receive;
-                    // console.log(jsonValue.cpu.percent);
-                    // console.log(jsonValue.memory.total);
-                    // console.log(jsonValue.memory.used);
-                    // console.log(jsonValue.memory.percent);
-                    // console.log(jsonValue.disk.total);
-                    // console.log(jsonValue.disk.used);
-                    // console.log(jsonValue.disk.percent);
-                    // console.log(jsonValue.network.send);
-                    // console.log(jsonValue.network.receive);
-
-                }
-            };
-
-            xhttp.open('GET', 'http://192.168.0.99:9009/sysinfo', true);
-            xhttp.send();
-
-        }, 1000);
+        // simulation_network();
     }
 
     function simulation_chart() {
@@ -251,7 +222,7 @@
         } else {
             // tab is active again
             // restart timers
-            simulation_chart()
+            // simulation_chart()
         }
     });
 
