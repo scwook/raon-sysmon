@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html>
-<div id = "cpu"></div>
+<div>CPU : <span id="cpu"></span></div>
+<div>Memory : <span id="memory"></span></div>
+<div>Disk : <span id="disk"></span></div>
+<div>Network : <span id="network"></span></div>
+<div>Traffic : <span id="traffic"></span></div>
+
+
 <body>
 
 </body>
 <script>
-    var dataArray = [];
+    var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
+    // var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
 
     var date = new Date();
     var timezone = "+00:00";
@@ -18,70 +25,268 @@
     |> filter(fn: (r) => r["cpu"] == "cpu-total") \
     |> last()';
 
-    var diskQuery = 'from(bucket: "control") \
-    |> range(start: -1m) \
-    |> filter(fn: (r) => r["_measurement"] == "disk") \
-    |> filter(fn: (r) => r["_field"] == "used_percent" or r["_field"] == "used") \
-    |> last()';
-
     var memoryQuery = 'from(bucket: "control") \
     |> range(start: -1m) \
     |> filter(fn: (r) => r["_measurement"] == "mem") \
     |> filter(fn: (r) => r["_field"] == "used" or r["_field"] == "used_percent" or r["_field"] == "total") \
     |> last()';
 
+    var diskQuery = 'from(bucket: "control") \
+    |> range(start: -1m) \
+    |> filter(fn: (r) => r["_measurement"] == "disk") \
+    |> filter(fn: (r) => r["_field"] == "used_percent" or r["_field"] == "used" or r["_field"] == "total" ) \
+    |> last()';
 
     var networkQuery = 'from(bucket: "control") \
-    |> range(start: -1m) \
+    |> range(start: -10s) \
     |> filter(fn: (r) => r["_measurement"] == "net") \
     |> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent") \
     |> last()';
 
-    var queryData =
-    {
-        "dialect": {
-            "annotations": [
-                "group"
-            ],
-            "commentPrefix": "#",
-            "dateTimeFormat": "RFC3339",
-            "delimiter": ",",
-            "header": true
+    var test = 'from(bucket: "control") \
+    |> range(start: -10s) \
+    |> filter(fn: (r) => r["_measurement"] == "net") \
+    |> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent")';
+
+    var queryData = {
+        "cpu":
+        {
+            "dialect": {
+                "annotations": [
+                    "group"
+                ],
+                "commentPrefix": "#",
+                "dateTimeFormat": "RFC3339",
+                "delimiter": ",",
+                "header": true
+            },
+            "now": isoTime,
+            "params": {},
+            "query": cpuQuery,
+            "type": "flux"
         },
-        "now": isoTime,
-        "params": {},
-        "query": cpuQuery,
-        "type": "flux"
+        "memory":
+        {
+            "dialect": {
+                "annotations": [
+                    "group"
+                ],
+                "commentPrefix": "#",
+                "dateTimeFormat": "RFC3339",
+                "delimiter": ",",
+                "header": true
+            },
+            "now": isoTime,
+            "params": {},
+            "query": memoryQuery,
+            "type": "flux"
+        },
+        "disk":
+        {
+            "dialect": {
+                "annotations": [
+                    "group"
+                ],
+                "commentPrefix": "#",
+                "dateTimeFormat": "RFC3339",
+                "delimiter": ",",
+                "header": true
+            },
+            "now": isoTime,
+            "params": {},
+            "query": diskQuery,
+            "type": "flux"
+        },
+        "network":
+        {
+            "dialect": {
+                "annotations": [
+                    "group"
+                ],
+                "commentPrefix": "#",
+                "dateTimeFormat": "RFC3339",
+                "delimiter": ",",
+                "header": true
+            },
+            "now": isoTime,
+            "params": {},
+            "query": networkQuery,
+            "type": "flux"
+        }
     };
 
-    setInterval(function () {
+    setInterval(monitoringCPU, 2000);
+    setInterval(monitoringMemory, 5000);
+    setInterval(monitoringDisk, 5000);
+    setInterval(monitoringNetwork, 1000);
+
+    function monitoringCPU() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
                 // var jsonValue = JSON.parse(this.responseText);
-                console.log(this.responseText);
-                dataArray = this.responseText.split(",");
-                console.log(dataArray);
-                var cpuTotalPercent = parseFloat(dataArray[26]) + parseFloat(dataArray[36]);
-                console.log(cpuTotalPercent);
-                document.getElementById('cpu').innerText = cpuTotalPercent.toFixed(1);
+                // console.log(this.responseText);
+                var data = this.responseText.split(",");
+                // console.log(dataArray);
+                var cpuTotalPercent = parseFloat(data[26]) + parseFloat(data[36]);
+                // console.log(cpuTotalPercent);
+                document.getElementById('cpu').innerText = cpuTotalPercent.toFixed(1) + '%';
             }
         };
 
         xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/query?org=raon', true);
 
         xhttp.setRequestHeader('Content-Type', 'application/json');
-        xhttp.setRequestHeader("Authorization", "Token 6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw==") // RAON
-        // xhttp.setRequestHeader("Authorization", "Token 6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog==") // HOME
-        xhttp.send(JSON.stringify(queryData));
+        xhttp.setRequestHeader("Authorization", "Token " + influxDBToken)
+        xhttp.send(JSON.stringify(queryData.cpu));
         // xhttp.send(createBucket);
-        date = new Date();
-        isoTime = date.toISOString().replace('Z', timezone);
-        queryData.now = isoTime;
-        console.log(isoTime);
-    }, 5000);
+        let date = new Date();
+        let isoTime = date.toISOString().replace('Z', timezone);
+        queryData.cpu.now = isoTime;
+    }
 
+    function monitoringMemory() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                let data = this.responseText.split(",");
+                
+                let total = parseInt(data[24]);
+                let used = parseInt(data[33]);
+                let percent = parseFloat(data[60]);
+
+                let unitDataTotal = changeUnit(total);
+                let unitDataUsed = changeUnit(used);
+
+                document.getElementById('memory').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit + ',' + unitDataUsed.value.toFixed(1) + unitDataUsed.unit + ',' + percent.toFixed(1) + '%';
+            }
+
+        };
+
+        xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/query?org=raon', true);
+
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.setRequestHeader("Authorization", "Token " + influxDBToken)
+        xhttp.send(JSON.stringify(queryData.memory));
+        // xhttp.send(createBucket);
+        let date = new Date();
+        let isoTime = date.toISOString().replace('Z', timezone);
+        queryData.memory.now = isoTime;
+    }
+
+    function monitoringDisk() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                let data = this.responseText.split(",");
+                let total = parseInt(data[32]);
+                let used = parseInt(data[45]);
+                let percent = parseFloat(data[84]);
+
+                let unitDataTotal = changeUnit(total);
+                let unitDataUsed = changeUnit(used);
+
+                document.getElementById('disk').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit + ',' + unitDataUsed.value.toFixed(1) + unitDataUsed.unit + ',' + percent.toFixed(1) + '%';
+            }
+        };
+
+        xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/query?org=raon', true);
+
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.setRequestHeader("Authorization", "Token " + influxDBToken)
+        xhttp.send(JSON.stringify(queryData.disk));
+        // xhttp.send(createBucket);
+        let date = new Date();
+        let isoTime = date.toISOString().replace('Z', timezone);
+        queryData.disk.now = isoTime;
+    }
+
+    var beforeReceiveData = 0;
+    var beforeSendData = 0;
+
+    function monitoringNetwork() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                let data = this.responseText.split(",");
+                let receive = parseInt(data[26]);
+                let send = parseInt(data[36]);
+
+                let unitReceiveData = changeUnit(receive);
+                let unitSendData = changeUnit(send);
+
+                document.getElementById('network').innerText = unitReceiveData.value.toFixed(1) + unitReceiveData.unit + ',' + unitSendData.value.toFixed(1) + unitSendData.unit;
+
+                let trafficReceive = receive - beforeReceiveData;
+                let trafficSend = send - beforeSendData;
+
+                let unitTrafficReceive = changeUnit(trafficReceive);
+                let unitTrafficSend = changeUnit(trafficSend);
+
+                document.getElementById('traffic').innerText = unitTrafficReceive.value.toFixed(1) + unitTrafficReceive.unit + '/s' + ',' + unitTrafficSend.value.toFixed(1) + unitTrafficSend.unit + '/s';
+
+                beforeReceiveData = receive;
+                beforeSendData = send;
+
+            }
+        };
+
+        xhttp.open('POST', 'http://192.168.60.123:8086/api/v2/query?org=raon', true);
+
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.setRequestHeader("Authorization", "Token " + influxDBToken) // RAON
+        // xhttp.setRequestHeader("Authorization", "Token 6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog==") // HOME
+        xhttp.send(JSON.stringify(queryData.network));
+        // xhttp.send(createBucket);
+        let date = new Date();
+        let isoTime = date.toISOString().replace('Z', timezone);
+        queryData.network.now = isoTime;
+    }
+
+    // var testval = changeUnit(1234567891);
+    // console.log(testval);
+
+    function changeUnit(byteValue) {
+        const KByte = 1000;
+        const MByte = KByte * 1000;
+        const GByte = MByte * 1000;
+        const TByte = GByte * 1000;
+        const PByte = TByte * 1000;
+
+        let calValue = 0;
+        let calUnit = 'B';
+
+        if (byteValue / KByte < 1) {
+            calValue = byteValue;
+            calUnit = 'B';
+        }
+        else if (byteValue / MByte < 1) {
+            calValue = byteValue / KByte;
+            calUnit = 'KB';
+        }
+        else if (byteValue / GByte < 1) {
+            calValue = byteValue / MByte;
+            calUnit = 'MB';
+        }
+        else if (byteValue / TByte < 1) {
+            calValue = byteValue / GByte;
+            calUnit = 'GB';
+        }
+        else if (byteValue / PByte < 1) {
+            calValue = byteValue / TByte;
+            calUnit = 'TB';
+        }
+        else {
+            calValue = byteValue / PByte;
+            calUnit = 'PB';
+        }
+
+        return { value: calValue, unit: calUnit }
+    }
 </script>
 
 </html>
