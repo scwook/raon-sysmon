@@ -1,3 +1,9 @@
+var cpuCurrentValue = 0.0;
+var memoryCurrentValue = 0.0;
+var diskCurrentValue = 0.0;
+var networkSendValue = 0.0;
+var networkReceiveValue = 0.0;
+
 var chartColors = {
     red: '#E4007F',
     orange: 'rgb(255, 159, 64)',
@@ -7,8 +13,6 @@ var chartColors = {
     purple: 'rgb(153, 102, 255)',
     grey: 'rgb(201, 203, 207)'
 };
-
-
 
 var cpuChartConfig = {
     // var color = Chart.helpers.color;
@@ -216,61 +220,31 @@ var diskChartConfig = {
 
 
 function cpuDataRefresh(chart) {
-    var pValue = Math.floor(Math.random() * 10);
-    // var pValue = networkSend / 1000000;
-    pValue = pValue.toFixed(1);
-
-    var sValue = Math.floor(Math.floor() * 10);
-    // var sValue = networkReceive / 1000000;
-    sValue = sValue.toFixed(1);
+    // var pValue = Math.floor(Math.random() * 10);
+    var pValue = cpuCurrentValue;
 
     chart.config.data.datasets[0].data.push({
         x: Date.now(),
         y: pValue
-    });
-
-    chart.config.data.datasets[1].data.push({
-        x: Date.now(),
-        y: sValue
     });
 };
 
 function memoryDataRefresh(chart) {
-    var pValue = Math.floor(Math.random() * 10);
-    // var pValue = networkSend / 1000000;
-    pValue = pValue.toFixed(1);
-
-    var sValue = Math.floor(Math.floor() * 10);
-    // var sValue = networkReceive / 1000000;
-    sValue = sValue.toFixed(1);
+    // var pValue = Math.floor(Math.random() * 10);
+    var pValue = memoryCurrentValue;
 
     chart.config.data.datasets[0].data.push({
         x: Date.now(),
         y: pValue
-    });
-
-    chart.config.data.datasets[1].data.push({
-        x: Date.now(),
-        y: sValue
     });
 };
 
 function diskDataRefresh(chart) {
-    var pValue = Math.floor(Math.random() * 10);
-    // var pValue = networkSend / 1000000;
-    pValue = pValue.toFixed(1);
-
-    var sValue = Math.floor(Math.floor() * 10);
-    // var sValue = networkReceive / 1000000;
-    sValue = sValue.toFixed(1);
+    // var pValue = Math.floor(Math.random() * 10);
+    var pValue = diskCurrentValue;
 
     chart.config.data.datasets[0].data.push({
         x: Date.now(),
         y: pValue
-    });
-
-    chart.config.data.datasets[1].data.push({
-        x: Date.now(),
-        y: sValue
     });
 };

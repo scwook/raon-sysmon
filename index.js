@@ -212,18 +212,15 @@ function changeUnit(byteValue) {
     return { value: calValue, unit: calUnit }
 }
 
-function aaa(value) {
-    console.log(value);
-}
-
 function monitoringCPU() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
             var data = this.responseText.split(",");
-            var cpuTotalPercent = parseFloat(data[26]) + parseFloat(data[36]);
-            document.getElementById('cpu-value').innerText = cpuTotalPercent.toFixed(1) + '%';
+            var cpuTotalPercent = parseFloat(data[26]) + parseFloat(data[36]).toFixed(1);
+            document.getElementById('cpu-value').innerText = cpuTotalPercent + '%';
+            cpuCurrentValue = cpuTotalPercent;
             doughnutChartAnimation('cpu-chart', cpuTotalPercent);
         }
     };
@@ -253,7 +250,6 @@ function monitoringMemory() {
             let unitDataTotal = changeUnit(total);
             let unitDataUsed = changeUnit(used);
 
-            // document.getElementById('memory').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit + ',' + unitDataUsed.value.toFixed(1) + unitDataUsed.unit + ',' + percent.toFixed(1) + '%';
             document.getElementById('memory-value').innerText = unitDataUsed.value.toFixed(1) + unitDataUsed.unit;
             document.getElementById('memory-total').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit;
 
@@ -286,7 +282,6 @@ function monitoringDisk() {
             let unitDataTotal = changeUnit(total);
             let unitDataUsed = changeUnit(used);
 
-            // document.getElementById('disk').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit + ',' + unitDataUsed.value.toFixed(1) + unitDataUsed.unit + ',' + percent.toFixed(1) + '%';
             document.getElementById('disk-value').innerText = unitDataUsed.value.toFixed(1) + unitDataUsed.unit;
             document.getElementById('disk-total').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit;
 
@@ -340,8 +335,7 @@ function monitoringNetwork() {
     xhttp.open('POST', queryString, true);
 
     xhttp.setRequestHeader('Content-Type', 'application/json');
-    xhttp.setRequestHeader("Authorization", "Token " + influxDBToken) // RAON
-    // xhttp.setRequestHeader("Authorization", "Token 6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog==") // HOME
+    xhttp.setRequestHeader("Authorization", "Token " + influxDBToken)
     xhttp.send(JSON.stringify(queryData.network));
 
     let date = new Date();
