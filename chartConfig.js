@@ -22,13 +22,7 @@ var cpuChartConfig = {
             label: 'Primary',
             // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
             borderColor: window.chartColors.blue,
-            fill: false,
-            cubicInterpolationMode: 'monotone',
-            data: [],
-        }, {
-            label: 'Secondary',
-            // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.blue,
+            borderWidth: 1,
             fill: false,
             cubicInterpolationMode: 'monotone',
             data: [],
@@ -52,7 +46,7 @@ var cpuChartConfig = {
             xAxes: [{
                 type: 'realtime',
                 realtime: {
-                    duration: 60000,
+                    duration: 6000,
                     refresh: 1000,
                     delay: 2000,
                     onRefresh: cpuDataRefresh
