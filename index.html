@@ -2,163 +2,142 @@
 <html>
 <link rel="stylesheet" type="text/css" href="index.css">
 
+<script src="index.js"></script>
+<script src="chartConfig.js"></script>
+
 <script src="./script/moment.js"></script>
 <script src="./script/chart.js@2.8.0"></script>
 <script src="./script/chartjs-plugin-streaming.js"></script>
 
 <body>
-    <div style="margin:auto; position: relative; width:1920px; height:80px;">
+    <div style="margin:auto; position: relative; width:1920px; height:80px">
         <div id="time-stamp"></div>
-        <div id="raon-box"><a href="main.html"><img width="133.7666" height="33.8293" src="images/raon-white.svg"></a>
+        <div id="raon-box"><img width="133.7666" height="33.8293" src="images/raon-white.svg"></a>
         </div>
         <div id="accelerator-control">CS</div>
     </div>
 
+    <div id="grid-container">
+        <!-- CPU -->
+        <div class="grid-item">
+            <p class="doughnutChartTitle">CPU</p>
+            <div id="cpu-value" class="doughnutChartText">0</div>
+            <div class="doughnutChartTextUnder">4Core</div>
 
+            <div class="doughnutContain">
+                <svg width="200" height="200" style="fill:none">
+                    <circle class="doughnutBackground" cx="93.5" cy="93.5" r="93" />
+                    <circle class="doughnutChart" id="cpu-chart" cx="93.5" cy="93.5" r="93"
+                        style="--doughuntColor:#00ace6;" />
+                </svg>
+            </div>
 
-    <!-- <div class="grid-item grid-1x1">
-        <p class="title">Storage</p>
-        <div id="storage-value" class="doughnutChartText">0</div>
-        <div class="doughnutChartTextUnder">100TB</div>
-
-        <div class="doughnut-contain">
-            <svg width="176" height="176" style="fill:none">
-                <circle class="doughnutBackground" cx="80" cy="80" r="80" />
-                <circle id="storage-chart" cx="80" cy="80" r="80" style="--doughuntColor:#00ace6;" />
-            </svg>
+            <div class="liveChartContain">
+                <canvas id="cpu-graph" style="width:400px; height:200px"></canvas>
+            </div>
         </div>
-    </div>
 
-    <div id="cpu">
-        <span>Percent : </span><span id="cpu-percent">0</span>
-    </div>
-    <div id="disk">
-        <span>Total : </span><span id="disk-total">0</span>
-        <span>Used : </span><span id="disk-used">0</span>
-        <span>Percent : </span><span id="disk-percent">0</span>
-    </div>
-    <div id="memory">
-        <span>Total : </span><span id="memory-total">0</span>
-        <span>Used : </span><span id="memory-used">0</span>
-        <span>Percent : </span><span id="memory-percent">0</span>
-    </div>
-    <div id="network">
-        <span>Send : </span><span id="network-send">0</span>
-        <span>Receive : </span><span id="network-receive">0</span>
-    </div>
+        <!-- Memory -->
+        <div class="grid-item">
+            <p class="doughnutChartTitle">Memory</p>
+            <div id="memory-value" class="doughnutChartText">0</div>
+            <div id="memory-total" class="doughnutChartTextUnder">32GB</div>
 
-    <div style="width:580px; height:280px;">
-        <canvas id="scl32-network"></canvas>
-    </div> -->
+            <div class="doughnutContain">
+                <svg width="200" height="200" style="fill:none">
+                    <circle class="doughnutBackground" cx="93.5" cy="93.5" r="93" />
+                    <circle class="doughnutChart" id="memory-chart" cx="93.5" cy="93.5" r="93"
+                        style="--doughuntColor:#E4007F;" />
+                </svg>
+            </div>
+
+            <div class="liveChartContain">
+                <canvas id="memory-graph" style="width:400px; height:200px"></canvas>
+            </div>
+        </div>
+
+        <!-- Disk -->
+        <div class="grid-item">
+            <p class="doughnutChartTitle">Disk</p>
+            <div id="disk-value" class="doughnutChartText">0</div>
+            <div id="disk-total" class="doughnutChartTextUnder">120GB</div>
+
+            <div class="doughnutContain">
+                <svg width="200" height="200" style="fill:none">
+                    <circle class="doughnutBackground" cx="93.5" cy="93.5" r="93" />
+                    <circle class="doughnutChart" id="disk-chart" cx="93.5" cy="93.5" r="93"
+                        style="--doughuntColor:#13AE67;" />
+                </svg>
+            </div>
+
+            <div class="liveChartContain">
+                <canvas id="disk-graph" style="width:400px; height:200px"></canvas>
+            </div>
+        </div>
+
+        <!-- Network -->
+        <div class="grid-item">
+
+        </div>
+
+        <!-- Network Chart -->
+        <div class="grid-item" style="grid-column: 2/4;">
+            <div class="networkChartContain">
+                <canvas id="network-graph" style="width: 820px; height: 300px;"></canvas>
+            </div>
+        </div>
+
+    </div>
 </body>
 
 <script>
-    var storageIntervalID;
-    var networkSend = 0
-    var networkReceive = 0;
-
     window.onload = function () {
-
+        document.getElementById('time-stamp').innerHTML = '2023-06-22 08:39:19';
         // var storageChartID = document.getElementById('storage-chart');
         // storageChartID.style.strokeDashoffset = '503';
+        // simulation_network();
+
+        var cpuChartID = document.getElementById('cpu-chart');
+        cpuChartID.style.strokeDashoffset = '585';
+
+        var memoryChartID = document.getElementById('memory-chart');
+        memoryChartID.style.strokeDashoffset = '585';
+
+        var memoryChartID = document.getElementById('disk-chart');
+        memoryChartID.style.strokeDashoffset = '585';
+
+
+        var cpuGraphContect = document.getElementById('cpu-graph').getContext('2d');
+        window.cpuGraph = new Chart(cpuGraphContect, cpuChartConfig);
+
+        var memoryGraphContect = document.getElementById('memory-graph').getContext('2d');
+        window.memoryGraph = new Chart(memoryGraphContect, memoryChartConfig);
+
+        var diskGraphContect = document.getElementById('disk-graph').getContext('2d');
+        window.diskGraph = new Chart(diskGraphContect, diskChartConfig);
+
+        setInterval(monitoringCPU, 5000);
+        setInterval(monitoringMemory, 5000);
+        setInterval(monitoringDisk, 10000);
+        // setInterval(monitoringNetwork, 1000);
+
+        // doughnutChartAnimation();
 
         // simulation_network();
+        cpuChart();
     }
 
-    function simulation_chart() {
-        var chartMaxLength = Math.ceil(2 * Math.PI * 80); // L = 2 * PI * Radius
-
-        // Storage
-        storageIntervalID = setInterval(function () {
-
-            var maxValue = 100;
-            var randomValue = Math.random() * maxValue;
-            var valueToOffset = Math.floor(chartMaxLength - chartMaxLength / maxValue * randomValue);
-
-            var storageValueID = document.getElementById('storage-value');
-            storageValueID.innerText = Math.floor(randomValue) + 'TB';
-
-            var fgID = document.getElementById('storage-chart');
-            var currentDashOffset = parseInt(fgID.style.strokeDashoffset);
-
-            var sign = valueToOffset - currentDashOffset;
-
-            var dir = 0;
-            if (sign > 0) {
-                dir = -1; // anitclockwise, increase offset value
-            } else if (sign < 0) {
-                dir = 1; // clockwise, decrease offset value
-            }
-
-            if (dir == 0) {
-                return;
-            }
-
-            var duration = 2000;
-            var interval = 10;
-            var count = 0;
-            var maxCount = Math.floor(duration / interval);
-            var x1 = 0.0;
-            var x2 = 1.0;
-            var dx = Math.abs(x1 - x2) / maxCount;
-            var x = 0.0;
-            var y = 0;
-            var y1 = (dir == 1) ? valueToOffset : currentDashOffset;
-            var y2 = (dir == 1) ? currentDashOffset : valueToOffset;
-            var a = Math.abs(currentDashOffset - valueToOffset);
-            var b = y1;
-
-            var id = setInterval(function () {
-
-                switch (dir) {
-                    case 1:
-                        y = a * Math.pow(2, -10 * x) + y1;
-                        break;
-
-                    case -1:
-                        y = a * (1 - Math.pow(2, -10 * x)) + y1;
-
-                        break;
-
-                    default:
-                        count = maxCount; // 
-                }
-
-                fgID.style.strokeDashoffset = Math.floor(y);
-
-                x += dx;
-                count += 1;
-
-                if (count == maxCount) {
-                    clearInterval(id);
-                }
-
-            }, interval);
-        }, 6000);
-    }
-
-    document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-            // tab is now inactive
-            // temporarily clear timer using clearInterval() / clearTimeout()
-            clearInterval(storageIntervalID);
-        } else {
-            // tab is active again
-            // restart timers
-            // simulation_chart()
-        }
-    });
-
-    var chartColors = {
-        red: 'rgb(255, 99, 132)',
-        orange: 'rgb(255, 159, 64)',
-        yellow: 'rgb(255, 205, 86)',
-        green: 'rgb(75, 192, 192)',
-        blue: 'rgb(54, 162, 235)',
-        purple: 'rgb(153, 102, 255)',
-        grey: 'rgb(201, 203, 207)'
-    };
-
+    // document.addEventListener('visibilitychange', function () {
+    //     if (document.hidden) {
+    //         // tab is now inactive
+    //         // temporarily clear timer using clearInterval() / clearTimeout()
+    //         clearInterval(storageIntervalID);
+    //     } else {
+    //         // tab is active again
+    //         // restart timers
+    //         // simulation_chart()
+    //     }
+    // });
 
     function simulation_network() {
 
@@ -196,11 +175,12 @@
                         bottom: 10
                     }
                 },
+                responsive: false,
                 scales: {
                     xAxes: [{
                         type: 'realtime',
                         realtime: {
-                            duration: 600000,
+                            duration: 60000,
                             refresh: 1000,
                             delay: 2000,
                             onRefresh: scl32DataOnRefresh
@@ -231,7 +211,7 @@
         };
 
 
-        var scl32ChartContext = document.getElementById('scl32-network').getContext('2d');
+        var scl32ChartContext = document.getElementById('cpu-graph').getContext('2d');
         window.scl32Chart = new Chart(scl32ChartContext, scl32CharConfig);
 
         function scl32DataOnRefresh(chart) {
