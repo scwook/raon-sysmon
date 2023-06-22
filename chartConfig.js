@@ -46,7 +46,7 @@ var cpuChartConfig = {
             xAxes: [{
                 type: 'realtime',
                 realtime: {
-                    duration: 6000,
+                    duration: 60000,
                     refresh: 1000,
                     delay: 2000,
                     onRefresh: cpuDataRefresh
