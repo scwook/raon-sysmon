@@ -6,7 +6,7 @@
 <script src="chartConfig.js"></script>
 
 <script src="./script/moment.js"></script>
-<script src="./script/chart.min.js"></script>
+<script src="./script/chart.js@2.8.0"></script>
 <script src="./script/chartjs-plugin-streaming.js"></script>
 
 <body>
@@ -77,10 +77,13 @@
 
         <!-- Network -->
         <div class="grid-item">
+            <p class="doughnutChartTitle">Network</p>
+            <div id="network-receive-value" class="doughnutChartText">0</div>
+            <div id="network-send-value" class="doughnutChartTextUnder">0</div>
 
         </div>
 
-        <!-- Network Chart -->
+        <!-- Network Graph -->
         <div class="grid-item" style="grid-column: 2/4;">
             <div class="networkChartContain">
                 <canvas id="network-graph" style="width: 820px; height: 300px;"></canvas>
@@ -116,10 +119,13 @@
         var diskGraphContect = document.getElementById('disk-graph').getContext('2d');
         window.diskGraph = new Chart(diskGraphContect, diskChartConfig);
 
+        var networkGraphContect = document.getElementById('network-graph').getContext('2d');
+        window.networkGraph = new Chart(networkGraphContect, networkChartConfig);
+
         setInterval(monitoringCPU, 5000);
         setInterval(monitoringMemory, 5000);
         setInterval(monitoringDisk, 10000);
-        // setInterval(monitoringNetwork, 1000);
+        setInterval(monitoringNetwork, 1000);
 
         // doughnutChartAnimation();
 
@@ -138,102 +144,6 @@
     //         // simulation_chart()
     //     }
     // });
-
-    function simulation_network() {
-
-        // SCL3, SCL2 Vlan 30, 20
-        var scl32CharConfig = {
-            // var color = Chart.helpers.color;
-            type: 'line',
-            data: {
-                datasets: [{
-                    label: 'Primary',
-                    // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
-                    borderColor: window.chartColors.red,
-                    fill: false,
-                    cubicInterpolationMode: 'monotone',
-                    data: [],
-                }, {
-                    label: 'Secondary',
-                    // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
-                    borderColor: window.chartColors.blue,
-                    fill: false,
-                    cubicInterpolationMode: 'monotone',
-                    data: [],
-                }]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: 'SCL3,2 Main Network Uplink'
-                },
-                legend: {
-                    display: false
-                },
-                layout: {
-                    padding: {
-                        bottom: 10
-                    }
-                },
-                responsive: false,
-                scales: {
-                    xAxes: [{
-                        type: 'realtime',
-                        realtime: {
-                            duration: 60000,
-                            refresh: 1000,
-                            delay: 2000,
-                            onRefresh: scl32DataOnRefresh
-                        },
-                        gridLines: {
-                            display: false
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'value'
-                        },
-                        gridLines: {
-                            display: false
-                        }
-                    }]
-                },
-                tooltips: {
-                    mode: 'nearest',
-                    intersect: false
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: false
-                }
-            }
-        };
-
-
-        var scl32ChartContext = document.getElementById('cpu-graph').getContext('2d');
-        window.scl32Chart = new Chart(scl32ChartContext, scl32CharConfig);
-
-        function scl32DataOnRefresh(chart) {
-            var pValue = Math.floor(Math.random() * 10);
-            // var pValue = networkSend / 1000000;
-            pValue = pValue.toFixed(1);
-
-            var sValue = Math.floor(Math.floor() * 10);
-            // var sValue = networkReceive / 1000000;
-            sValue = sValue.toFixed(1);
-
-            chart.config.data.datasets[0].data.push({
-                x: Date.now(),
-                y: pValue
-            });
-
-            chart.config.data.datasets[1].data.push({
-                x: Date.now(),
-                y: sValue
-            });
-        }
-    }
 </script>
 
 </html>

@@ -1,8 +1,8 @@
 var cpuCurrentValue = 0.0;
 var memoryCurrentValue = 0.0;
 var diskCurrentValue = 0.0;
-var networkSendValue = 0.0;
 var networkReceiveValue = 0.0;
+var networkSendValue = 0.0;
 
 var chartColors = {
     red: '#E4007F',
@@ -22,8 +22,9 @@ var cpuChartConfig = {
             label: 'Primary',
             // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
             borderColor: window.chartColors.blue,
-            borderWidth: 1,
-            fill: false,
+            borderWidth: 3,
+            pointRadius: 0,
+            // fill: false,
             cubicInterpolationMode: 'monotone',
             data: [],
         }]
@@ -84,6 +85,8 @@ var memoryChartConfig = {
             label: 'Primary',
             // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
             borderColor: window.chartColors.red,
+            borderWidth: 3,
+            pointRadius: 0,
             fill: false,
             cubicInterpolationMode: 'monotone',
             data: [],
@@ -152,6 +155,8 @@ var diskChartConfig = {
             label: 'Primary',
             // backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
             borderColor: window.chartColors.green,
+            borderWidth: 3,
+            pointRadius: 0,
             fill: false,
             cubicInterpolationMode: 'monotone',
             data: [],
@@ -213,6 +218,76 @@ var diskChartConfig = {
 };
 
 
+var networkChartConfig = {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'Primary',
+            borderColor: window.chartColors.purple,
+            fill: false,
+            cubicInterpolationMode: 'monotone',
+            data: [],
+        }, {
+            label: 'Secondary',
+            borderColor: window.chartColors.yellow,
+            fill: false,
+            cubicInterpolationMode: 'monotone',
+            data: [],
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: ''
+        },
+        legend: {
+            display: false
+        },
+        layout: {
+            padding: {
+                bottom: 10
+            }
+        },
+        responsive: false,
+        scales: {
+            xAxes: [{
+                type: 'realtime',
+                realtime: {
+                    duration: 60000,
+                    refresh: 1000,
+                    delay: 2000,
+                    onRefresh: networkDataRefresh,
+                },
+                gridLines: {
+                    display: false
+                }
+            }],
+            yAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'KB/s'
+                },
+                gridLines: {
+                    display: false
+                },
+                // ticks: {
+                //     min: 0,
+                //     max: 1000000,
+                //     stepSize: 200000
+                // }
+            }]
+        },
+        tooltips: {
+            mode: 'nearest',
+            intersect: false
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: false
+        }
+    }
+};
+
 function cpuDataRefresh(chart) {
     // var pValue = Math.floor(Math.random() * 10);
     var pValue = cpuCurrentValue;
@@ -240,5 +315,22 @@ function diskDataRefresh(chart) {
     chart.config.data.datasets[0].data.push({
         x: Date.now(),
         y: pValue
+    });
+};
+
+function networkDataRefresh(chart) {
+    // var pValue = Math.floor(Math.random() * 10);
+    let pValue = networkReceiveValue;
+    let sValue = networkSendValue;
+    var timestamp = Date.now();
+
+    chart.config.data.datasets[0].data.push({
+        x: timestamp,
+        y: pValue
+    });
+
+    chart.config.data.datasets[1].data.push({
+        x: timestamp,
+        y: sValue
     });
 };

@@ -1,9 +1,9 @@
-var serverAddr = "http://192.168.0.99:8086";
+var serverAddr = "http://192.168.60.123:8086";
 var dataIOendpoint = "/api/v2/query?org=raon";
 var queryString = serverAddr + dataIOendpoint;
 
-// var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
-var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
+var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
+// var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
 
 var date = new Date();
 var timezone = "+00:00";
@@ -173,6 +173,9 @@ function doughnutChartAnimation(chartID, chartValue) {
     }, interval);
 }
 
+// function findIndex(data) {
+//     let 
+// }
 
 function changeUnit(byteValue) {
     const KByte = 1000;
@@ -217,8 +220,11 @@ function monitoringCPU() {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
-            var data = this.responseText.split(",");
-            var cpuTotalPercent = parseFloat(data[26]) + parseFloat(data[36]);
+            let data = this.responseText.split(",");
+            let cpuUsageSystemIndex = data.indexOf("usage_system") - 1;
+            let cpuUsageUserIndex = data.indexOf("usage_user") - 1;
+
+            let cpuTotalPercent = parseFloat(data[cpuUsageSystemIndex]) + parseFloat(data[cpuUsageUserIndex]);
             document.getElementById('cpu-value').innerText = cpuTotalPercent.toFixed(1) + '%';
             cpuCurrentValue = cpuTotalPercent.toFixed(1);
             doughnutChartAnimation('cpu-chart', cpuTotalPercent);
@@ -243,15 +249,21 @@ function monitoringMemory() {
 
             let data = this.responseText.split(",");
 
-            let total = parseInt(data[24]);
-            let used = parseInt(data[33]);
-            let percent = parseFloat(data[60]);
+            let memoryTotalIndex = data.indexOf("total") - 1;
+            let memoryUsedIndex = data.indexOf("used") - 1;
+            let memoryPercentIndex = data.indexOf("used_percent") - 1;
+
+            let total = parseInt(data[memoryTotalIndex]);
+            let used = parseInt(data[memoryUsedIndex]);
+            let percent = parseFloat(data[memoryPercentIndex]);
 
             let unitDataTotal = changeUnit(total);
             let unitDataUsed = changeUnit(used);
 
             document.getElementById('memory-value').innerText = unitDataUsed.value.toFixed(1) + unitDataUsed.unit;
             document.getElementById('memory-total').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit;
+
+            memoryCurrentValue = unitDataUsed.value.toFixed(1);
 
             doughnutChartAnimation('memory-chart', percent);
         }
@@ -275,6 +287,8 @@ function monitoringDisk() {
         if (this.readyState == 4 && this.status == 200) {
 
             let data = this.responseText.split(",");
+
+
             let total = parseInt(data[32]);
             let used = parseInt(data[45]);
             let percent = parseFloat(data[84]);
@@ -285,6 +299,7 @@ function monitoringDisk() {
             document.getElementById('disk-value').innerText = unitDataUsed.value.toFixed(1) + unitDataUsed.unit;
             document.getElementById('disk-total').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit;
 
+            diskCurrentValue = unitDataUsed.value.toFixed(1);
             doughnutChartAnimation('disk-chart', percent);
 
         }
@@ -313,10 +328,10 @@ function monitoringNetwork() {
             let receive = parseInt(data[26]);
             let send = parseInt(data[36]);
 
-            let unitReceiveData = changeUnit(receive);
-            let unitSendData = changeUnit(send);
+            // let unitReceiveData = changeUnit(receive);
+            // let unitSendData = changeUnit(send);
 
-            document.getElementById('network').innerText = unitReceiveData.value.toFixed(1) + unitReceiveData.unit + ',' + unitSendData.value.toFixed(1) + unitSendData.unit;
+            // document.getElementById('network').innerText = unitReceiveData.value.toFixed(1) + unitReceiveData.unit + ',' + unitSendData.value.toFixed(1) + unitSendData.unit;
 
             let trafficReceive = receive - beforeReceiveData;
             let trafficSend = send - beforeSendData;
@@ -324,8 +339,12 @@ function monitoringNetwork() {
             let unitTrafficReceive = changeUnit(trafficReceive);
             let unitTrafficSend = changeUnit(trafficSend);
 
-            document.getElementById('traffic').innerText = unitTrafficReceive.value.toFixed(1) + unitTrafficReceive.unit + '/s' + ',' + unitTrafficSend.value.toFixed(1) + unitTrafficSend.unit + '/s';
+            document.getElementById('network-receive-value').innerText = unitTrafficReceive.value.toFixed(1) + unitTrafficReceive.unit + '/s';
+            document.getElementById('network-send-value').innerText = unitTrafficSend.value.toFixed(1) + unitTrafficSend.unit + '/s';
 
+            networkReceiveValue = trafficReceive;
+            networkSendValue = trafficSend;
+            
             beforeReceiveData = receive;
             beforeSendData = send;
 
