@@ -25,7 +25,7 @@
 body {
     margin: 0px;
     background-color: black;
-    background-image: url('images/background1.png');
+    background-image: url('static/images/background1.png');
     background-repeat: no-repeat;
     background-position: center var(--background-image-top);
     font-family: "Roboto-Thin";
