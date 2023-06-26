@@ -2,10 +2,10 @@
     --background-image-top: 0px;
 }
 
-@font-face {
+/* @font-face {
     font-family: "Helvetica-Neue-Light";
     src: url(fonts/helveticaneue/HelveticaNeueLight.ttf);
-}
+} */
 
 @font-face {
     font-family: "Roboto-Thin";
@@ -16,16 +16,16 @@
     font-family: "Roboto-Light";
     src: url(fonts/Roboto-Light.ttf);
 }
-
+/* 
 @font-face {
     font-family: "NotoSansKR-Thin";
     src: url(fonts/NotoSansKR-Thin.otf);
-}
+} */
 
 body {
     margin: 0px;
     background-color: black;
-    background-image: url('static/images/background1.png');
+    background-image: url('images/background1.png');
     background-repeat: no-repeat;
     background-position: center var(--background-image-top);
     font-family: "Roboto-Thin";
@@ -35,14 +35,27 @@ body {
 
 #time-stamp {
     position: absolute;
-    color: white;
-    font-family: "Roboto-Thin";
-    font-size: 42px;
+    width: 500px;
+    height:40px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -70%);
+    text-align: center;
 }
 
+#timestamp-date {
+    color: gray;
+    font-family: "Roboto-Thin";
+    font-size: 36px;
+
+}
+
+#timestamp-time {
+    color: white;
+    font-family: "Roboto-Light";
+    font-size: 42px;
+
+}
 
 #raon-box {
     position: absolute;
@@ -58,7 +71,7 @@ body {
     width: 150px;
     left: 160px;
     top: 40px;
-    font-family: "Helvetica-Neue-Light";
+    font-family: "Roboto-Light";
     letter-spacing: 2px;
     z-index: 100;
 }
@@ -79,16 +92,30 @@ body {
     align-content: center;
 }
 
-.grid-item {
+.boxEdgeStyle {
+    display: none;
+    fill: none;
+    stroke: #ccc;
+    stroke-miterlimit: 10;
+}
+
+.gridItem {
     position: relative;
-    /* background-color: rgba(50, 50, 50, 0.3); */
+    /* background-color: rgba(26 26, 26, 0.2); */
     z-index: -2;
     /* border-style: dotted;
     border-color: red; */
     color: white;
 }
 
-
+.gridItemTitle {
+    color: white;
+    font-size: 36px;
+    text-align: center;
+    font-family: Roboto-Thin;
+    line-height: 0.0;
+    /* background-color: tomato; */
+}
 
 .doughnutContain {
     position: relative;
@@ -105,14 +132,6 @@ body {
     stroke-width: 14;
 }
 
-.doughnutChartTitle {
-    color: white;
-    font-size: 36px;
-    text-align: center;
-    font-family: Roboto-Thin;
-    line-height: 0.0;
-    /* background-color: tomato; */
-}
 
 .doughnutChartText {
     position: absolute;
@@ -154,4 +173,34 @@ body {
 .networkChartContain {
     width:820px; 
     height:300px;
+}
+
+#network-send-value {
+    position: absolute;
+    width: 100%;
+    top: 180px;
+    color: white;
+    font-size: 42px;
+    text-align: center;
+}
+
+#network-receive-value {
+    position: absolute;
+    width: 100%;
+    top: 120px;
+    color: white;
+    font-size: 42px;
+    text-align: center;
+}
+
+#send-arrow {
+    position: absolute;
+    top: 126px;
+    left: 85px;
+}
+
+#receive-arrow {
+    position: absolute;
+    top: 187px;
+    left: 85px;
 }

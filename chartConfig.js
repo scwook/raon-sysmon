@@ -47,9 +47,9 @@ var cpuChartConfig = {
             xAxes: [{
                 type: 'realtime',
                 realtime: {
-                    duration: 60000,
-                    refresh: 1000,
-                    delay: 2000,
+                    duration: 300000,
+                    refresh: 5000,
+                    delay: 5000,
                     onRefresh: cpuDataRefresh
                 },
                 gridLines: {
@@ -63,6 +63,11 @@ var cpuChartConfig = {
                 },
                 gridLines: {
                     display: false
+                },
+                ticks: {
+                    min: 0,
+                    // max: 100,
+                    // stepSize: 200000
                 }
             }]
         },
@@ -117,9 +122,9 @@ var memoryChartConfig = {
             xAxes: [{
                 type: 'realtime',
                 realtime: {
-                    duration: 60000,
-                    refresh: 1000,
-                    delay: 2000,
+                    duration: 300000,
+                    refresh: 5000,
+                    delay: 5000,
                     onRefresh: memoryDataRefresh
                 },
                 gridLines: {
@@ -133,6 +138,11 @@ var memoryChartConfig = {
                 },
                 gridLines: {
                     display: false
+                },
+                ticks: {
+                    min: 0,
+                    max: 17,
+                    // stepSize: 200000
                 }
             }]
         },
@@ -187,7 +197,7 @@ var diskChartConfig = {
             xAxes: [{
                 type: 'realtime',
                 realtime: {
-                    duration: 60000,
+                    duration: 300000,
                     refresh: 1000,
                     delay: 2000,
                     onRefresh: diskDataRefresh
@@ -203,6 +213,11 @@ var diskChartConfig = {
                 },
                 gridLines: {
                     display: false
+                },
+                ticks: {
+                    min: 0,
+                    max: 33,
+                    // stepSize: 200000
                 }
             }]
         },
@@ -265,16 +280,16 @@ var networkChartConfig = {
             yAxes: [{
                 scaleLabel: {
                     display: true,
-                    labelString: 'KB/s'
+                    labelString: 'MB/s'
                 },
                 gridLines: {
                     display: false
                 },
-                // ticks: {
-                //     min: 0,
-                //     max: 1000000,
-                //     stepSize: 200000
-                // }
+                ticks: {
+                    min: 0,
+                    // max: 1000000,
+                    // stepSize: 200000
+                }
             }]
         },
         tooltips: {
@@ -320,10 +335,12 @@ function diskDataRefresh(chart) {
 
 function networkDataRefresh(chart) {
     // var pValue = Math.floor(Math.random() * 10);
-    let pValue = networkReceiveValue;
-    let sValue = networkSendValue;
+    let pValue = networkReceiveValue / MByte;
+    let sValue = networkSendValue / MByte;
     var timestamp = Date.now();
 
+    console.log(pValue, Date());
+    
     chart.config.data.datasets[0].data.push({
         x: timestamp,
         y: pValue

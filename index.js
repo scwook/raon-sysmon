@@ -1,15 +1,26 @@
-var serverAddr = "http://192.168.0.99:8086";
+var serverAddr = "http://192.168.60.123:8086";
 var dataIOendpoint = "/api/v2/query?org=raon";
 var queryString = serverAddr + dataIOendpoint;
 
-// var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
-var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
+var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
+// var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
 
 var date = new Date();
 var timezone = "+00:00";
 var isoTime = date.toISOString().replace('Z', timezone);
 
-var chartMaxLength = Math.ceil(186 * Math.PI); // L = 2 * PI * Radius
+const chartMaxLength = Math.ceil(186 * Math.PI); // L = 2 * PI * Radius
+const KByte = 1000;
+const MByte = KByte * 1000;
+const GByte = MByte * 1000;
+const TByte = GByte * 1000;
+const PByte = TByte * 1000;
+
+var systemQuery = 'from(bucket: "control") \
+|> range(start: -10s) \
+|> filter(fn: (r) => r["_measurement"] == "system") \
+|> filter(fn: (r) => r["_field"] == "uptime" or r["_field"] == "n_cpus") \
+|> last()';
 
 var cpuQuery = 'from(bucket: "control") \
 |> range(start: -1m) \
@@ -36,12 +47,23 @@ var networkQuery = 'from(bucket: "control") \
 |> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent") \
 |> last()';
 
-var test = 'from(bucket: "control") \
-|> range(start: -10s) \
-|> filter(fn: (r) => r["_measurement"] == "net") \
-|> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent")';
-
 var queryData = {
+    "system":
+    {
+        "dialect": {
+            "annotations": [
+                "group"
+            ],
+            "commentPrefix": "#",
+            "dateTimeFormat": "RFC3339",
+            "delimiter": ",",
+            "header": true
+        },
+        "now": isoTime,
+        "params": {},
+        "query": systemQuery,
+        "type": "flux"
+    },
     "cpu":
     {
         "dialect": {
@@ -173,17 +195,7 @@ function doughnutChartAnimation(chartID, chartValue) {
     }, interval);
 }
 
-// function findIndex(data) {
-//     let 
-// }
-
 function changeUnit(byteValue) {
-    const KByte = 1000;
-    const MByte = KByte * 1000;
-    const GByte = MByte * 1000;
-    const TByte = GByte * 1000;
-    const PByte = TByte * 1000;
-
     let calValue = 0;
     let calUnit = 'B';
 
@@ -215,6 +227,35 @@ function changeUnit(byteValue) {
     return { value: calValue, unit: calUnit }
 }
 
+function monitoringSystem() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+            let data = this.responseText.split(",");
+            let uptimeIndex = data.indexOf("uptime") - 1;
+            let nCPUsIndex = data.indexOf("n_cpus") - 1;
+
+            let uptime = parseInt(data[uptimeIndex]);
+            let ncpu = parseInt(data[nCPUsIndex]);
+
+            // document.getElementById('time-stamp').innerText = uptime;
+            document.getElementById('cpu-core').innerText = ncpu + 'Core';
+
+        }
+    };
+
+    xhttp.open('POST', queryString, true);
+
+    xhttp.setRequestHeader('Content-Type', 'application/json');
+    xhttp.setRequestHeader("Authorization", "Token " + influxDBToken)
+    xhttp.send(JSON.stringify(queryData.system));
+
+    let date = new Date();
+    let isoTime = date.toISOString().replace('Z', timezone);
+    queryData.cpu.now = isoTime;
+}
+
 function monitoringCPU() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -227,7 +268,10 @@ function monitoringCPU() {
             let cpuTotalPercent = parseFloat(data[cpuUsageSystemIndex]) + parseFloat(data[cpuUsageUserIndex]);
             document.getElementById('cpu-value').innerText = cpuTotalPercent.toFixed(1) + '%';
             cpuCurrentValue = cpuTotalPercent.toFixed(1);
-            doughnutChartAnimation('cpu-chart', cpuTotalPercent);
+
+            if (!documentHidden) {
+                doughnutChartAnimation('cpu-chart', cpuTotalPercent);
+            }
         }
     };
 
@@ -265,7 +309,9 @@ function monitoringMemory() {
 
             memoryCurrentValue = unitDataUsed.value.toFixed(1);
 
-            doughnutChartAnimation('memory-chart', percent);
+            if (!documentHidden) {
+                doughnutChartAnimation('memory-chart', percent);
+            }
         }
 
     };
@@ -300,8 +346,10 @@ function monitoringDisk() {
             document.getElementById('disk-total').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit;
 
             diskCurrentValue = unitDataUsed.value.toFixed(1);
-            doughnutChartAnimation('disk-chart', percent);
 
+            if (!documentHidden) {
+                doughnutChartAnimation('disk-chart', percent);
+            }
         }
     };
 
@@ -330,6 +378,7 @@ function monitoringNetwork() {
             // console.log(data);
             // let unitReceiveData = changeUnit(receive);
             // let unitSendData = changeUnit(send);
+            // console.log(data);
 
             // document.getElementById('network').innerText = unitReceiveData.value.toFixed(1) + unitReceiveData.unit + ',' + unitSendData.value.toFixed(1) + unitSendData.unit;
 
@@ -344,9 +393,14 @@ function monitoringNetwork() {
 
             networkReceiveValue = trafficReceive;
             networkSendValue = trafficSend;
-            
+
             beforeReceiveData = receive;
             beforeSendData = send;
+
+            let date = new Date(data[25]);
+            
+            document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
+            document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
 
         }
     };

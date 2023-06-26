@@ -10,8 +10,8 @@
 <script src="./script/chartjs-plugin-streaming.js"></script>
 
 <body>
-    <div style="margin:auto; position: relative; width:1920px; height:80px">
-        <div id="time-stamp"></div>
+    <div style="margin:auto; position: relative; width:1920px; height:80px;">
+        <div id="time-stamp"><span id="timestamp-date"></span><span id="timestamp-time"></span></div>
         <div id="raon-box"><img width="133.7666" height="33.8293" src="images/raon-white.svg"></a>
         </div>
         <div id="accelerator-control">CS</div>
@@ -19,10 +19,16 @@
 
     <div id="grid-container">
         <!-- CPU -->
-        <div class="grid-item">
-            <p class="doughnutChartTitle">CPU</p>
+        <div class="gridItem">
+            <svg width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
+                <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
+                <polyline class="boxEdgeStyle" points="401.5 10.5 401.5 0.5 391.5 0.5" />
+                <polyline class="boxEdgeStyle" points="391.5 501.5 401.5 501.5 401.5 491.5" />
+                <polyline class="boxEdgeStyle" points="0.5 491.5 0.5 501.5 10.5 501.5" />
+            </svg>
+            <p class="gridItemTitle">CPU</p>
             <div id="cpu-value" class="doughnutChartText">0</div>
-            <div class="doughnutChartTextUnder">4Core</div>
+            <div id="cpu-core" class="doughnutChartTextUnder">0Core</div>
 
             <div class="doughnutContain">
                 <svg width="200" height="200" style="fill:none">
@@ -38,8 +44,14 @@
         </div>
 
         <!-- Memory -->
-        <div class="grid-item">
-            <p class="doughnutChartTitle">Memory</p>
+        <div class="gridItem">
+            <svg width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
+                <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
+                <polyline class="boxEdgeStyle" points="401.5 10.5 401.5 0.5 391.5 0.5" />
+                <polyline class="boxEdgeStyle" points="391.5 501.5 401.5 501.5 401.5 491.5" />
+                <polyline class="boxEdgeStyle" points="0.5 491.5 0.5 501.5 10.5 501.5" />
+            </svg>
+            <p class="gridItemTitle">Memory</p>
             <div id="memory-value" class="doughnutChartText">0</div>
             <div id="memory-total" class="doughnutChartTextUnder">32GB</div>
 
@@ -57,8 +69,14 @@
         </div>
 
         <!-- Disk -->
-        <div class="grid-item">
-            <p class="doughnutChartTitle">Disk</p>
+        <div class="gridItem">
+            <svg width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
+                <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
+                <polyline class="boxEdgeStyle" points="401.5 10.5 401.5 0.5 391.5 0.5" />
+                <polyline class="boxEdgeStyle" points="391.5 501.5 401.5 501.5 401.5 491.5" />
+                <polyline class="boxEdgeStyle" points="0.5 491.5 0.5 501.5 10.5 501.5" />
+            </svg>
+            <p class="gridItemTitle">Disk</p>
             <div id="disk-value" class="doughnutChartText">0</div>
             <div id="disk-total" class="doughnutChartTextUnder">120GB</div>
 
@@ -76,29 +94,54 @@
         </div>
 
         <!-- Network -->
-        <div class="grid-item">
-            <p class="doughnutChartTitle">Network</p>
-            <div id="network-receive-value" class="doughnutChartText">0</div>
-            <div id="network-send-value" class="doughnutChartTextUnder">0</div>
+        <div class="gridItem">
+            <svg width="402" height="302" style="position: absolute; top:-1px; left:-1px;">
+                <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
+                <polyline class="boxEdgeStyle" points="401.5 10.5 401.5 0.5 391.5 0.5" />
+                <polyline class="boxEdgeStyle" points="391.5 301.5 401.5 301.5 401.5 291.5" />
+                <polyline class="boxEdgeStyle" points="0.5 291.5 0.5 301.5 10.5 301.5" />
+            </svg>
+            <p class="gridItemTitle">Network</p>
+            <svg id="send-arrow">
+                <line class="st0" x1="10" y1="32" x2="10" y2="14.4"
+                    style="fill:none; stroke:rgb(153, 102, 255); stroke-width:5px;" />
+                <polygon points="20,17.3 10,0 0,17.3" style="fill:rgb(153, 102, 255)" />
+            </svg>
+            <svg id="receive-arrow">
+                <line class="st0" x1="10" y1="0" x2="10" y2="17.6"
+                    style="fill:none; stroke:rgb(255, 205, 86); stroke-width:5px;" />
+                <polygon points="0,14.7 10,32 20,14.7" style="fill:rgb(255, 205, 86)" />
+            </svg>
 
+            <div id="network-send-value">0</div>
+            <div id="network-receive-value">0</div>
         </div>
 
         <!-- Network Graph -->
-        <div class="grid-item" style="grid-column: 2/4;">
+        <div class="gridItem" style="grid-column: 2/4;">
+            <svg width="822" height="302" style="position: absolute; top:-1px; left:-1px;">
+                <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
+                <polyline class="boxEdgeStyle" points="821.5 10.5 821.5 0.5 811.5 0.5" />
+                <polyline class="boxEdgeStyle" points="811.5 301.5 821.5 301.5 821.5 291.5" />
+                <polyline class="boxEdgeStyle" points="0.5 291.5 0.5 301.5 10.5 301.5" />
+            </svg>
             <div class="networkChartContain">
                 <canvas id="network-graph" style="width: 820px; height: 300px;"></canvas>
             </div>
         </div>
-
     </div>
 </body>
 
 <script>
+    var systemIntervalId;
+    var cpuIntervalId;
+    var memroyIntervalId;
+    var diskIntervalId;
+    var networkIntervalId;
+    var documentHidden = false;
+
     window.onload = function () {
-        document.getElementById('time-stamp').innerHTML = '2023-06-22 08:39:19';
-        // var storageChartID = document.getElementById('storage-chart');
-        // storageChartID.style.strokeDashoffset = '503';
-        // simulation_network();
+        // document.getElementById('time-stamp').innerHTML = '2023-06-22 08:39:19';
 
         var cpuChartID = document.getElementById('cpu-chart');
         cpuChartID.style.strokeDashoffset = '585';
@@ -108,7 +151,6 @@
 
         var memoryChartID = document.getElementById('disk-chart');
         memoryChartID.style.strokeDashoffset = '585';
-
 
         var cpuGraphContect = document.getElementById('cpu-graph').getContext('2d');
         window.cpuGraph = new Chart(cpuGraphContect, cpuChartConfig);
@@ -122,28 +164,22 @@
         var networkGraphContect = document.getElementById('network-graph').getContext('2d');
         window.networkGraph = new Chart(networkGraphContect, networkChartConfig);
 
-        setInterval(monitoringCPU, 5000);
-        setInterval(monitoringMemory, 5000);
-        setInterval(monitoringDisk, 10000);
-        setInterval(monitoringNetwork, 1000);
-
-        // doughnutChartAnimation();
-
-        // simulation_network();
-        // cpuChart();
+        systemIntervalId = setInterval(monitoringSystem, 10000);
+        cpuIntervalId = setInterval(monitoringCPU, 5000);
+        memroyIntervalId = setInterval(monitoringMemory, 5000);
+        diskIntervalId = setInterval(monitoringDisk, 10000);
+        networkIntervalId = setInterval(monitoringNetwork, 1000);
     }
 
-    // document.addEventListener('visibilitychange', function () {
-    //     if (document.hidden) {
-    //         // tab is now inactive
-    //         // temporarily clear timer using clearInterval() / clearTimeout()
-    //         clearInterval(storageIntervalID);
-    //     } else {
-    //         // tab is active again
-    //         // restart timers
-    //         // simulation_chart()
-    //     }
-    // });
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            documentHidden = true;
+            console.log('hide');
+        } else {
+            documentHidden = false;
+            console.log('view');
+        }
+    });
 </script>
 
 </html>
