@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <link rel="stylesheet" type="text/css" href="index.css">
 
 <script src="index.js"></script>
@@ -164,7 +164,7 @@
         var networkGraphContect = document.getElementById('network-graph').getContext('2d');
         window.networkGraph = new Chart(networkGraphContect, networkChartConfig);
 
-        systemIntervalId = setInterval(monitoringSystem, 10000);
+        systemIntervalId = setInterval(monitoringSystem, 60000);
         cpuIntervalId = setInterval(monitoringCPU, 5000);
         memroyIntervalId = setInterval(monitoringMemory, 5000);
         diskIntervalId = setInterval(monitoringDisk, 10000);

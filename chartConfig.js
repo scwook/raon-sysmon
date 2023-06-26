@@ -339,8 +339,6 @@ function networkDataRefresh(chart) {
     let sValue = networkSendValue / MByte;
     var timestamp = Date.now();
 
-    console.log(pValue, Date());
-    
     chart.config.data.datasets[0].data.push({
         x: timestamp,
         y: pValue

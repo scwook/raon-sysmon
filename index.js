@@ -239,7 +239,7 @@ function monitoringSystem() {
             let uptime = parseInt(data[uptimeIndex]);
             let ncpu = parseInt(data[nCPUsIndex]);
 
-            // document.getElementById('time-stamp').innerText = uptime;
+            document.getElementById('accelerator-control').innerText = Math.floor(uptime / 3600);
             document.getElementById('cpu-core').innerText = ncpu + 'Core';
 
         }
@@ -373,8 +373,13 @@ function monitoringNetwork() {
         if (this.readyState == 4 && this.status == 200) {
 
             let data = this.responseText.split(",");
-            let receive = parseInt(data[26]);
-            let send = parseInt(data[36]);
+            
+            let sendIndex = data.indexOf('bytes_sent');
+            let receiveIndex = data.indexOf('bytes_recv');
+
+            let send = parseInt(data[sendIndex-1]);
+            let receive = parseInt(data[receiveIndex-1]);
+
             // console.log(data);
             // let unitReceiveData = changeUnit(receive);
             // let unitSendData = changeUnit(send);
@@ -397,7 +402,7 @@ function monitoringNetwork() {
             beforeReceiveData = receive;
             beforeSendData = send;
 
-            let date = new Date(data[25]);
+            let date = new Date(data[sendIndex-2]);
             
             document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
             document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
