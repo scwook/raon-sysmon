@@ -1,0 +1,7 @@
+Package: nodejs-test
+Version: 0.0.1
+Maintainer: example <example@example.com>
+Depends: nodejs
+Architecture: all
+Homepage: http://example.com
+Description: Nodejs web test

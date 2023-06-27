@@ -3,7 +3,8 @@
 <link rel="stylesheet" type="text/css" href="index.css">
 
 <script src="influxDB.js"></script>
-<script src="chartConfig.js"></script>
+<script src="liveGraph.js"></script>
+<script src="config.js"></script>
 
 <script src="./script/moment.js"></script>
 <script src="./script/chart.js@2.8.0"></script>
@@ -141,8 +142,6 @@
     var documentHidden = false;
 
     window.onload = function () {
-        // document.getElementById('time-stamp').innerHTML = '2023-06-22 08:39:19';
-
         var cpuChartID = document.getElementById('cpu-chart');
         cpuChartID.style.strokeDashoffset = '585';
 

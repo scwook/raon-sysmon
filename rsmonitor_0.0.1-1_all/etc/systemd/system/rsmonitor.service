@@ -1,0 +1,11 @@
+[Unit]
+Description=A simple express sample project
+
+[Service]
+ExecStart=/usr/bin/rsmonitor
+Restart=always
+Group=nogroup
+WorkingDirectory=/etc/rsmonitor
+
+[Install]
+WantedBy=multi-user.target

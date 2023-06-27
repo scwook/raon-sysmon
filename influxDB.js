@@ -1,9 +1,9 @@
-var serverAddr = "http://192.168.60.123:8086";
+var serverAddr = "http://192.168.0.99:8086";
 var dataIOendpoint = "/api/v2/query?org=raon";
 var queryString = serverAddr + dataIOendpoint;
 
-var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
-// var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
+// var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
+var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
 
 var date = new Date();
 var timezone = "+00:00";
@@ -45,7 +45,7 @@ var networkQuery = 'from(bucket: "control") \
 |> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "net") \
 |> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent") \
-|> last()';
+|> limit(n:2, offset: 0)';
 
 var queryData = {
     "system":
@@ -292,7 +292,7 @@ function monitoringMemory() {
         if (this.readyState == 4 && this.status == 200) {
 
             let data = this.responseText.split(",");
-
+            
             let memoryTotalIndex = data.indexOf("total") - 1;
             let memoryUsedIndex = data.indexOf("used") - 1;
             let memoryPercentIndex = data.indexOf("used_percent") - 1;
@@ -334,10 +334,23 @@ function monitoringDisk() {
 
             let data = this.responseText.split(",");
 
+            let total = 0;
+            let used = 0;
 
-            let total = parseInt(data[32]);
-            let used = parseInt(data[45]);
-            let percent = parseFloat(data[84]);
+            let index = -1;
+            while(true) {
+                index = data.indexOf('total', index + 1);
+                if(index == -1) break;
+                total += parseInt(data[index - 1]);
+            }
+            
+            while(true) {
+                index = data.indexOf('used', index + 1);
+                if(index == -1) break;
+                used += parseInt(data[index - 1]);
+            }
+
+            let percent = used / total * 100;
 
             let unitDataTotal = changeUnit(total);
             let unitDataUsed = changeUnit(used);
@@ -364,24 +377,27 @@ function monitoringDisk() {
     queryData.disk.now = isoTime;
 }
 
-var beforeReceiveData = 0;
-var beforeSendData = 0;
-
 function monitoringNetwork() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
             let data = this.responseText.split(",");
-            
-            let sendIndex = data.indexOf('bytes_sent');
-            let receiveIndex = data.indexOf('bytes_recv');
+            // console.log(data);
+            let sendIndex1 = data.indexOf('bytes_sent');
+            let sendIndex2 = data.indexOf('bytes_sent', sendIndex1 + 1);
 
-            let send = parseInt(data[sendIndex-1]);
-            let receive = parseInt(data[receiveIndex-1]);
+            let receiveIndex1 = data.indexOf('bytes_recv');
+            let receiveIndex2 = data.indexOf('bytes_recv', receiveIndex1 + 1);
 
-            let trafficReceive = receive - beforeReceiveData;
-            let trafficSend = send - beforeSendData;
+            let send1 = parseInt(data[sendIndex1-1]);
+            let send2 = parseInt(data[sendIndex2-1]);
+
+            let receive1 = parseInt(data[receiveIndex1-1]);
+            let receive2 = parseInt(data[receiveIndex2-1]);
+
+            let trafficSend = send2 - send1;
+            let trafficReceive = receive2 - receive1;
 
             let unitTrafficReceive = changeUnit(trafficReceive);
             let unitTrafficSend = changeUnit(trafficSend);
@@ -392,10 +408,7 @@ function monitoringNetwork() {
             networkReceiveValue = trafficReceive;
             networkSendValue = trafficSend;
 
-            beforeReceiveData = receive;
-            beforeSendData = send;
-
-            let date = new Date(data[sendIndex-2]);
+            let date = new Date(data[sendIndex1-2]);
             
             document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
             document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
