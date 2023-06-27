@@ -2,7 +2,7 @@
 <html lang="en">
 <link rel="stylesheet" type="text/css" href="index.css">
 
-<script src="index.js"></script>
+<script src="influxDB.js"></script>
 <script src="chartConfig.js"></script>
 
 <script src="./script/moment.js"></script>
@@ -152,6 +152,12 @@
         var memoryChartID = document.getElementById('disk-chart');
         memoryChartID.style.strokeDashoffset = '585';
 
+        monitoringSystem();
+        monitoringCPU();
+        monitoringMemory();
+        monitoringDisk();
+        monitoringNetwork();
+
         var cpuGraphContect = document.getElementById('cpu-graph').getContext('2d');
         window.cpuGraph = new Chart(cpuGraphContect, cpuChartConfig);
 
@@ -163,6 +169,8 @@
 
         var networkGraphContect = document.getElementById('network-graph').getContext('2d');
         window.networkGraph = new Chart(networkGraphContect, networkChartConfig);
+
+
 
         systemIntervalId = setInterval(monitoringSystem, 60000);
         cpuIntervalId = setInterval(monitoringCPU, 5000);

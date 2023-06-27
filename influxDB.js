@@ -380,13 +380,6 @@ function monitoringNetwork() {
             let send = parseInt(data[sendIndex-1]);
             let receive = parseInt(data[receiveIndex-1]);
 
-            // console.log(data);
-            // let unitReceiveData = changeUnit(receive);
-            // let unitSendData = changeUnit(send);
-            // console.log(data);
-
-            // document.getElementById('network').innerText = unitReceiveData.value.toFixed(1) + unitReceiveData.unit + ',' + unitSendData.value.toFixed(1) + unitSendData.unit;
-
             let trafficReceive = receive - beforeReceiveData;
             let trafficSend = send - beforeSendData;
 
@@ -406,7 +399,6 @@ function monitoringNetwork() {
             
             document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
             document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
-
         }
     };
 
