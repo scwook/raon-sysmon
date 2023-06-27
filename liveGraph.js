@@ -239,12 +239,16 @@ var networkChartConfig = {
         datasets: [{
             label: 'Primary',
             borderColor: window.chartColors.purple,
+            borderWidth: 3,
+            pointRadius: 0,
             fill: false,
             cubicInterpolationMode: 'monotone',
             data: [],
         }, {
             label: 'Secondary',
             borderColor: window.chartColors.yellow,
+            borderWidth: 3,
+            pointRadius: 0,
             fill: false,
             cubicInterpolationMode: 'monotone',
             data: [],
@@ -268,7 +272,7 @@ var networkChartConfig = {
             xAxes: [{
                 type: 'realtime',
                 realtime: {
-                    duration: 60000,
+                    duration: 300000,
                     refresh: 1000,
                     delay: 2000,
                     onRefresh: networkDataRefresh,
@@ -334,9 +338,8 @@ function diskDataRefresh(chart) {
 };
 
 function networkDataRefresh(chart) {
-    // var pValue = Math.floor(Math.random() * 10);
-    let pValue = networkReceiveValue / MByte;
-    let sValue = networkSendValue / MByte;
+    let pValue = networkSendValue / MByte;
+    let sValue = networkReceiveValue / MByte;
     var timestamp = Date.now();
 
     chart.config.data.datasets[0].data.push({

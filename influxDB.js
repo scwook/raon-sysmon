@@ -1,9 +1,9 @@
-var serverAddr = "http://192.168.0.99:8086";
+var serverAddr = "http://192.168.60.123:8086";
 var dataIOendpoint = "/api/v2/query?org=raon";
 var queryString = serverAddr + dataIOendpoint;
 
-// var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
-var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
+var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
+// var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
 
 var date = new Date();
 var timezone = "+00:00";
