@@ -1,6 +1,8 @@
 var serverAddr = SERVER_ADDR;
+var bucket = BUCKET;
 var dataIOendpoint = "/api/v2/query?org=" + ORGANIZATION;
 var queryString = serverAddr + dataIOendpoint;
+
 
 var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
 // var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
@@ -16,32 +18,32 @@ const GByte = MByte * 1000;
 const TByte = GByte * 1000;
 const PByte = TByte * 1000;
 
-var systemQuery = 'from(bucket: "control") \
+var systemQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
 |> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "system") \
 |> filter(fn: (r) => r["_field"] == "uptime" or r["_field"] == "n_cpus") \
 |> last()';
 
-var cpuQuery = 'from(bucket: "control") \
+var cpuQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
 |> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "cpu") \
 |> filter(fn: (r) => r["_field"] == "usage_system" or r["_field"] == "usage_user") \
 |> filter(fn: (r) => r["cpu"] == "cpu-total") \
 |> last()';
 
-var memoryQuery = 'from(bucket: "control") \
+var memoryQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
 |> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "mem") \
 |> filter(fn: (r) => r["_field"] == "used" or r["_field"] == "used_percent" or r["_field"] == "total") \
 |> last()';
 
-var diskQuery = 'from(bucket: "control") \
+var diskQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
 |> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "disk") \
 |> filter(fn: (r) => r["_field"] == "used_percent" or r["_field"] == "used" or r["_field"] == "total" ) \
 |> last()';
 
-var networkQuery = 'from(bucket: "control") \
+var networkQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
 |> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "net") \
 |> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent") \

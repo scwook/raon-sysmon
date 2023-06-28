@@ -1,7 +1,7 @@
-Package: nodejs-test
+Package: rsmonitor
 Version: 0.0.1
-Maintainer: example <example@example.com>
+Maintainer: scwook <scwook@ibs.re.kr>
 Depends: nodejs
 Architecture: all
 Homepage: http://example.com
-Description: Nodejs web test
+Description: RAON System Monitoring
