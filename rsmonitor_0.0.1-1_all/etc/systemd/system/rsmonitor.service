@@ -1,5 +1,5 @@
 [Unit]
-Description=A simple express sample project
+Description=RAON System Monitoring
 
 [Service]
 ExecStart=/usr/bin/rsmonitor

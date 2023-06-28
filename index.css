@@ -80,6 +80,35 @@ body {
     z-index: 100;
 }
 
+#system-info{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 100%;
+    height: 40px;
+    font-family: "Roboto-Thin";
+    color: gray;
+    font-size: 26px;
+    text-align: right;
+
+    /* border-style: dotted;
+    border-color: red; */
+}
+
+#system-uptime{
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    width: 100%;
+    height: 40px;
+    font-family: "Roboto-Thin";
+    color: white;
+    font-size: 26px;
+    text-align: right;
+    /* border-style: dotted;
+    border-color: red; */
+}
+
 #grid-container {
     display: grid;
     margin: auto;
@@ -96,8 +125,15 @@ body {
     align-content: center;
 }
 
-.boxEdgeStyle {
+#cpu-edgeBox, 
+#memory-edgeBox, 
+#disk-edgeBox, 
+#network-edgeBox, 
+#network-graph-edgeBox {
     display: none;
+}
+
+.boxEdgeStyle {
     fill: none;
     stroke: #ccc;
     stroke-miterlimit: 10;
@@ -110,6 +146,8 @@ body {
     /* border-style: dotted;
     border-color: red; */
     color: white;
+    opacity: 0;
+    animation: animatefadeIn 1s linear forwards;
 }
 
 .gridItemTitle {
@@ -207,4 +245,13 @@ body {
     position: absolute;
     top: 187px;
     left: 80px;
+}
+
+@keyframes animatefadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

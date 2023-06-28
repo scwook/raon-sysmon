@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="icon" href="images/favicon.png">
 <link rel="stylesheet" type="text/css" href="index.css">
 
+<script src="config.js"></script>
 <script src="influxDB.js"></script>
 <script src="liveGraph.js"></script>
-<script src="config.js"></script>
 
 <script src="./script/moment.js"></script>
 <script src="./script/chart.js@2.8.0"></script>
@@ -32,12 +33,17 @@
             </svg>
         </div>
         <div id="accelerator-control">CS</div>
+
+        <div id="system-info"></div>
+        <div id="system-uptime"></div>
     </div>
+
+
 
     <div id="grid-container">
         <!-- CPU -->
         <div class="gridItem">
-            <svg width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
+            <svg id="cpu-edgeBox" width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
                 <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
                 <polyline class="boxEdgeStyle" points="401.5 10.5 401.5 0.5 391.5 0.5" />
                 <polyline class="boxEdgeStyle" points="391.5 501.5 401.5 501.5 401.5 491.5" />
@@ -62,7 +68,7 @@
 
         <!-- Memory -->
         <div class="gridItem">
-            <svg width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
+            <svg id="memory-edgeBox" width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
                 <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
                 <polyline class="boxEdgeStyle" points="401.5 10.5 401.5 0.5 391.5 0.5" />
                 <polyline class="boxEdgeStyle" points="391.5 501.5 401.5 501.5 401.5 491.5" />
@@ -70,7 +76,7 @@
             </svg>
             <p class="gridItemTitle">Memory</p>
             <div id="memory-value" class="doughnutChartText">0</div>
-            <div id="memory-total" class="doughnutChartTextUnder">32GB</div>
+            <div id="memory-total" class="doughnutChartTextUnder">0</div>
 
             <div class="doughnutContain">
                 <svg width="200" height="200" style="fill:none">
@@ -87,7 +93,7 @@
 
         <!-- Disk -->
         <div class="gridItem">
-            <svg width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
+            <svg id="disk-edgeBox" width="402" height="502" style="position: absolute; top:-1px; left:-1px;">
                 <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
                 <polyline class="boxEdgeStyle" points="401.5 10.5 401.5 0.5 391.5 0.5" />
                 <polyline class="boxEdgeStyle" points="391.5 501.5 401.5 501.5 401.5 491.5" />
@@ -95,7 +101,7 @@
             </svg>
             <p class="gridItemTitle">Disk</p>
             <div id="disk-value" class="doughnutChartText">0</div>
-            <div id="disk-total" class="doughnutChartTextUnder">120GB</div>
+            <div id="disk-total" class="doughnutChartTextUnder">0</div>
 
             <div class="doughnutContain">
                 <svg width="200" height="200" style="fill:none">
@@ -112,7 +118,7 @@
 
         <!-- Network -->
         <div class="gridItem">
-            <svg width="402" height="302" style="position: absolute; top:-1px; left:-1px;">
+            <svg id="network-edgeBox" width="402" height="302" style="position: absolute; top:-1px; left:-1px;">
                 <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
                 <polyline class="boxEdgeStyle" points="401.5 10.5 401.5 0.5 391.5 0.5" />
                 <polyline class="boxEdgeStyle" points="391.5 301.5 401.5 301.5 401.5 291.5" />
@@ -136,7 +142,7 @@
 
         <!-- Network Graph -->
         <div class="gridItem" style="grid-column: 2/4;">
-            <svg width="822" height="302" style="position: absolute; top:-1px; left:-1px;">
+            <svg id="network-graph-edgeBox" width="822" height="302" style="position: absolute; top:-1px; left:-1px;">
                 <polyline class="boxEdgeStyle" points="10.5 0.5 0.5 0.5 0.5 10.5" />
                 <polyline class="boxEdgeStyle" points="821.5 10.5 821.5 0.5 811.5 0.5" />
                 <polyline class="boxEdgeStyle" points="811.5 301.5 821.5 301.5 821.5 291.5" />
@@ -158,6 +164,8 @@
     var documentHidden = false;
 
     window.onload = function () {
+        document.getElementById('system-info').innerText = SERVER_NAME + ' ' + SERVICE_NAME;
+
         var cpuChartID = document.getElementById('cpu-chart');
         cpuChartID.style.strokeDashoffset = '585';
 
@@ -184,8 +192,6 @@
 
         var networkGraphContect = document.getElementById('network-graph').getContext('2d');
         window.networkGraph = new Chart(networkGraphContect, networkChartConfig);
-
-
 
         systemIntervalId = setInterval(monitoringSystem, 60000);
         cpuIntervalId = setInterval(monitoringCPU, 5000);

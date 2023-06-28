@@ -1,5 +1,5 @@
-var serverAddr = "http://192.168.60.123:8086";
-var dataIOendpoint = "/api/v2/query?org=raon";
+var serverAddr = SERVER_ADDR;
+var dataIOendpoint = "/api/v2/query?org=" + ORGANIZATION;
 var queryString = serverAddr + dataIOendpoint;
 
 var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
@@ -23,20 +23,20 @@ var systemQuery = 'from(bucket: "control") \
 |> last()';
 
 var cpuQuery = 'from(bucket: "control") \
-|> range(start: -1m) \
+|> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "cpu") \
 |> filter(fn: (r) => r["_field"] == "usage_system" or r["_field"] == "usage_user") \
 |> filter(fn: (r) => r["cpu"] == "cpu-total") \
 |> last()';
 
 var memoryQuery = 'from(bucket: "control") \
-|> range(start: -1m) \
+|> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "mem") \
 |> filter(fn: (r) => r["_field"] == "used" or r["_field"] == "used_percent" or r["_field"] == "total") \
 |> last()';
 
 var diskQuery = 'from(bucket: "control") \
-|> range(start: -1m) \
+|> range(start: -10s) \
 |> filter(fn: (r) => r["_measurement"] == "disk") \
 |> filter(fn: (r) => r["_field"] == "used_percent" or r["_field"] == "used" or r["_field"] == "total" ) \
 |> last()';
@@ -239,7 +239,7 @@ function monitoringSystem() {
             let uptime = parseInt(data[uptimeIndex]);
             let ncpu = parseInt(data[nCPUsIndex]);
 
-            document.getElementById('accelerator-control').innerText = Math.floor(uptime / 3600);
+            document.getElementById('system-uptime').innerText = Math.floor(uptime / 3600) + 'h';
             document.getElementById('cpu-core').innerText = ncpu + 'Core';
 
         }
