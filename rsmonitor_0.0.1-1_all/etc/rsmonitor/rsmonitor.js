@@ -18,6 +18,14 @@ var app = http.createServer(function(request, response){
             response.end();
         });
     }
+    else if(request.url==='/config.js'){
+        fs.readFile(__dirname + '/config.js', function(err, data){
+            console.log('influxDB.js loading...');
+            response.writeHead(200);
+            response.write(data);
+            response.end();
+        });
+    }
     else if(request.url==='/influxDB.js'){
         fs.readFile(__dirname + '/influxDB.js', function(err, data){
             console.log('influxDB.js loading...');
@@ -53,6 +61,14 @@ var app = http.createServer(function(request, response){
     else if(request.url==='/script/chartjs-plugin-streaming.js'){
         fs.readFile(__dirname + '/script/chartjs-plugin-streaming.js', function(err, data){
             console.log('chartjs-plugin-streaming.js loading...');
+            response.writeHead(200);
+            response.write(data);
+            response.end();
+        });
+    }
+    else if(request.url==='/images/favicon.png'){
+        fs.readFile(__dirname + '/images/favicon.png', function(err, data){
+            console.log('favicon.png loading...');
             response.writeHead(200);
             response.write(data);
             response.end();
