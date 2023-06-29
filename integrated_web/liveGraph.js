@@ -17,7 +17,7 @@ var networkChartConfig = {
         datasets: [{
             label: 'Primary',
             borderColor: window.chartColors.purple,
-            borderWidth: 3,
+            borderWidth: 2,
             pointRadius: 0,
             fill: false,
             cubicInterpolationMode: 'monotone',
