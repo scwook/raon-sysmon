@@ -103,55 +103,48 @@ body {
     margin: auto;
     position: relative;
     top: 80px;
-    grid-template-columns: 400px 400px 400px;
-    grid-template-rows: 500px 300px;
+    grid-template-columns: 900px 900px;
+    grid-template-rows: 266px 266px 266px;
     gap: 40px 40px;
-    width: 1280px;
-    height: 860px;
+    width: 1840px;
+    height: 878px;
     /* border-style: dotted;
     border-color: red; */
     justify-content: center;
     align-content: center;
 }
 
-#cpu-edgeBox, 
-#memory-edgeBox, 
-#disk-edgeBox, 
-#network-edgeBox, 
-#network-graph-edgeBox {
-    display: none;
-}
-
-.boxEdgeStyle {
-    fill: none;
-    stroke: #ccc;
-    stroke-miterlimit: 10;
-}
-
 .gridItem {
     position: relative;
-    /* background-color: rgba(26 26, 26, 0.2); */
+    background-color: rgba(26 26, 26, 0.2);
     z-index: -2;
     /* border-style: dotted;
     border-color: red; */
     color: white;
-    opacity: 0;
-    animation: animatefadeIn 1s linear forwards;
+    /* opacity: 0; */
+    /* animation: animatefadeIn 1s linear forwards; */
 }
 
 .gridItemTitle {
-    color: white;
-    font-size: 36px;
+    position:absolute;
+    width: 194px;
+    left: 40px;
+    top: 10px;
+    color: gray;
+    font-size: 32px;
     text-align: center;
     font-family: Roboto-Thin;
-    line-height: 0.0;
+    /* line-height: 0.0; */
     /* background-color: tomato; */
+
 }
 
 .doughnutContain {
-    position: relative;
-    width: 200px;
-    height: 200px;
+    position: absolute;
+    left: 40px;
+    top: 60px;
+    width: 194px;
+    height: 194px;
     transform: rotate(-90deg);
     margin: auto;
 }
@@ -163,77 +156,65 @@ body {
     stroke-width: 14;
 }
 
-
 .doughnutChartText {
     position: absolute;
-    width: 100%;
-    top: 130px;
+    width: 194px;
+    left: 40px;
+    top: 138px;
     color: white;
-    font-size: 42px;
+    font-size: 32px;
     text-align: center;
+    /* border-style: dotted;
+    border-color: red; */
 }
 
-.doughnutChartTextUnder {
-    position: absolute;
-    width: 100%;
-    top: 180px;
-    color: gray;
-    font-size: 26px;
-    text-align: center;
+.networkValueContain {
+    display: flex;
+    margin: 10px;
+    justify-content: right;
+    align-items: center;
 }
 
-.doughnutChart {
+.networkValue {
+    color: white;
+    font-size: 32px;
+    text-align: left;
+}
+
+.cpuDoughnutChart,
+.memoryDoughnutChart,
+.diskDoughnutChart {
     stroke: var(--doughuntColor);
     stroke-width: 14;
     stroke-linecap: round;
-    stroke-dasharray: 585;
-    stroke-dashoffset: 585;
     transform: translate(7px, 7px);
     /* animation-timing-function: ease-out; */
     animation-fill-mode: forwards;
 }
 
+.cpuDoughnutChart {
+    stroke-dasharray: 566;
+    stroke-dashoffset: 566;
+}
+
+.memoryDoughnutChart {
+    stroke-dasharray: 446;
+    stroke-dashoffset: 446;
+}
+
+.diskDoughnutChart {
+    stroke-dasharray: 330;
+    stroke-dashoffset: 330;
+}
+
 .liveChartContain {
-    width:400px; 
-    height:200px;
     position: absolute;
-    bottom: 0px;
-    top: 300px;
-}
-
-.networkChartContain {
-    width:820px; 
-    height:300px;
-}
-
-#network-send-value {
-    position: absolute;
-    width: 100%;
-    top: 120px;
-    color: white;
-    font-size: 42px;
-    text-align: center;
-}
-
-#network-receive-value {
-    position: absolute;
-    width: 100%;
-    top: 180px;
-    color: white;
-    font-size: 42px;
-    text-align: center;
-}
-
-#send-arrow {
-    position: absolute;
-    top: 126px;
-    left: 80px;
-}
-
-#receive-arrow {
-    position: absolute;
-    top: 187px;
-    left: 80px;
+    left: 280px;
+    top: 60px;
+    width:600px; 
+    height:180px;
+    /* border-style: dotted;
+    border-color: red; */
 }
 
 @keyframes animatefadeIn {
