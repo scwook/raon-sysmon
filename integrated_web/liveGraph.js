@@ -25,7 +25,7 @@ var networkChartConfig = {
         }, {
             label: 'Secondary',
             borderColor: window.chartColors.yellow,
-            borderWidth: 3,
+            borderWidth: 2,
             pointRadius: 0,
             fill: false,
             cubicInterpolationMode: 'monotone',

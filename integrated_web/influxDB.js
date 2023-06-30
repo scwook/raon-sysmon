@@ -4,8 +4,8 @@ var dataIOendpoint = "/api/v2/query?org=" + ORGANIZATION;
 var queryString = serverAddr + dataIOendpoint;
 
 
-// var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
-var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
+var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
+// var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
 
 var date = new Date();
 var timezone = "+00:00";
@@ -120,9 +120,6 @@ function doughnutChartAnimation(chartID, chartValue) {
     let chartRadius = fgID.getAttribute('r');
     let chartMaxLength = Math.ceil(2 * chartRadius * Math.PI)
     let valueToOffset = Math.floor(chartMaxLength - chartMaxLength / maxValue * value);
-
-    console.log(chartRadius, chartMaxLength);
-
     let currentDashOffset = parseInt(fgID.style.strokeDashoffset);
 
     let sign = valueToOffset - currentDashOffset;

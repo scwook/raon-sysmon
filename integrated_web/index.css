@@ -193,8 +193,8 @@ body {
 }
 
 .cpuDoughnutChart {
-    stroke-dasharray: 565;
-    stroke-dashoffset: 565;
+    stroke-dasharray: 330;
+    stroke-dashoffset: 330;
 }
 
 .memoryDoughnutChart {
@@ -203,8 +203,8 @@ body {
 }
 
 .diskDoughnutChart {
-    stroke-dasharray: 330;
-    stroke-dashoffset: 330;
+    stroke-dasharray: 565;
+    stroke-dashoffset: 565;
 }
 
 .liveChartContain {
