@@ -15,7 +15,7 @@
 body {
     margin: 0px;
     background-color: black;
-    background-image: url('images/background1.png');
+    background-image: url('images/background5.png');
     background-repeat: no-repeat;
     background-position: center var(--background-image-top);
     font-family: "Roboto-Thin";
@@ -69,54 +69,70 @@ body {
     z-index: 100;
 }
 
-#system-info{
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    width: 100%;
-    height: 40px;
-    font-family: "Roboto-Thin";
-    color: gray;
-    font-size: 26px;
-    text-align: right;
-
-    /* border-style: dotted;
-    border-color: red; */
-}
-
-#system-uptime{
-    position: absolute;
-    right: 20px;
-    top: 60px;
-    width: 100%;
-    height: 40px;
-    font-family: "Roboto-Thin";
-    color: white;
-    font-size: 26px;
-    text-align: right;
-    /* border-style: dotted;
-    border-color: red; */
-}
-
-#grid-container {
-    display: grid;
+.body-box {
+    width: 1920px;
+    height: 980px;
     margin: auto;
-    position: relative;
-    top: 80px;
+    /* border-style: dotted; */
+    /* border-color: red; */
+}
+
+.slide-button {
+    width: 40px;
+    height: 980px;
+    font-size: 32px;
+    margin: 0px;
+    color: white;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    float: left;
+    /* border-style: dotted; */
+    /* border-color: red; */
+}
+
+.slide-box {
+    width: 1840px;
+    height: 980px;
+    float: left;
+    /* border-style: dotted; */
+    /* border-color: greenyellow; */
+}
+
+.slide-page {
+    width: 1840px;
+    height: 980px;
+    /* border-style: dotted; */
+    /* border-color: blue; */
+}
+
+.slide-page-title {
+    width: 1840px;
+    height: 50px;
+    font-size: 40px;
+    text-align: center;
+    color: white;
+}
+
+.gridContainer {
+    display: grid;
+    /* margin: auto; */
+    /* position: relative; */
+    /* top: 80px; */
     grid-template-columns: 900px 900px;
     grid-template-rows: 266px 266px 266px;
     gap: 40px 40px;
     width: 1840px;
     height: 878px;
-    /* border-style: dotted;
-    border-color: red; */
-    justify-content: center;
-    align-content: center;
+    /* border-style: dotted; */
+    /* border-color: yellow; */
+    /* justify-content: center; */
+    /* align-content: center; */
 }
 
 .gridItem {
     position: relative;
-    background-color: rgba(26 26, 26, 0.2);
+    background-color: rgba(26 26, 26, 0.3);
     z-index: -2;
     /* border-style: dotted;
     border-color: red; */
@@ -210,9 +226,9 @@ body {
 .liveChartContain {
     position: absolute;
     left: 280px;
-    top: 60px;
+    top: 40px;
     width:600px; 
-    height:180px;
+    height:220px;
     /* border-style: dotted;
     border-color: red; */
 }
@@ -223,5 +239,27 @@ body {
     }
     to {
         opacity: 1;
+    }
+}
+
+@keyframes animateleft {
+    from {
+        left: -300px;
+        opacity: 0
+    }
+    to {
+        left: 0;
+        opacity: 1
+    }
+}
+
+@keyframes animateright {
+    from {
+        right: -300px;
+        opacity: 0
+    }
+    to {
+        right: 0;
+        opacity: 1
     }
 }

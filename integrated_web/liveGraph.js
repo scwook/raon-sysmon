@@ -51,7 +51,7 @@ var networkChartConfig = {
                 type: 'realtime',
                 realtime: {
                     duration: 300000,
-                    refresh: 1000,
+                    refresh: 3000,
                     delay: 2000,
                     onRefresh: networkDataRefresh,
                 },
@@ -86,8 +86,8 @@ var networkChartConfig = {
 };
 
 function networkDataRefresh(chart) {
-    let pValue = networkSendValue / MByte;
-    let sValue = networkReceiveValue / MByte;
+    let pValue = networkValueArray[chart.id].send / MByte;
+    let sValue = networkValueArray[chart.id].receive / MByte;
     var timestamp = Date.now();
 
     chart.config.data.datasets[0].data.push({

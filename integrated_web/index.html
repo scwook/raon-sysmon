@@ -4,6 +4,7 @@
 <link rel="stylesheet" type="text/css" href="index.css">
 
 <script src="config.js"></script>
+<script src="page.js"></script>
 <script src="influxDB.js"></script>
 <script src="liveGraph.js"></script>
 
@@ -33,117 +34,48 @@
             </svg>
         </div>
         <div id="accelerator-control">CS</div>
-
-        <div id="system-info"></div>
-        <div id="system-uptime"></div>
     </div>
 
-    <div id="grid-container">
-        <!-- 1 x 1 -->
-        <div class="gridItem">
-            <div id="system-name1" class="gridItemTitle">ALARM</div>
-            <div id="cpu-value1" class="doughnutChartText">0.6</div>
 
-            <!-- Network -->
-            <div class="networkValueContain">
-                <svg width="24" height="24">
-                    <line x1="12" y1="0" x2="12" y2="13.6"
-                        style="fill:none;stroke:rgb(153, 102, 255);stroke-width:4;stroke-miterlimit:10;" />
-                    <polygon points="4.8,11.5 12,24 19.2,11.5 " style="fill:rgb(153, 102, 255);" />
-                </svg>
-                <div id="network-send-value1" class="networkValue">12.5KB/s</div>
+    <div class="body-box">
+        <button class="slide-button" onclick="changePage(-1)">&#10094;</button>
 
-                <div style="width:10px;"></div>
-
-                <svg width="24" height="24">
-                    <line x1="12" y1="24" x2="12" y2="10.3"
-                        style="fill:none;stroke:rgb(255, 205, 86);stroke-width:4;stroke-miterlimit:10;" />
-                    <polygon points="19.2,12.4 12,0 4.8,12.4 " style="fill:rgb(255, 205, 86);" />
-                </svg>
-                <div id="network-receive-value1" class="networkValue">54.3MB/s</div>
+        <div class="slide-box">
+            <!-- Page 1 -->
+            <div class="slide-page" style="display: block;">
+                <div class="slide-page-title"></div>
+                <div class="gridContainer">
+                </div>
             </div>
-
-            <!-- CPU -->
-            <div class="doughnutContain">
-                <svg width="200" height="200" style="fill:none">
-                    <circle class="doughnutBackground" cx="90" cy="90" r="52.5" />
-                    <circle class="cpuDoughnutChart" id="cpu-chart1" cx="90" cy="90" r="52.5"
-                        style="--doughuntColor:#00ace6;" />
-                </svg>
-            </div>
-            
-            <!-- Memory -->
-            <div class="doughnutContain">
-                <svg width="200" height="200" style="fill:none">
-                    <circle class="doughnutBackground" cx="90" cy="90" r="71" />
-                    <circle class="memoryDoughnutChart" id="memory-chart1" cx="90" cy="90" r="71"
-                        style="--doughuntColor:#E4007F;" />
-                </svg>
-            </div>
-
-            <!-- Disk -->
-            <div class="doughnutContain">
-                <svg width="200" height="200" style="fill:none">
-                    <circle class="doughnutBackground" cx="90" cy="90" r="90" />
-                    <circle class="diskDoughnutChart" id="disk-chart1" cx="90" cy="90" r="90"
-                        style="--doughuntColor:#13AE67;" />
-                </svg>
-            </div>
-
-            <!-- Network Graph -->
-            <div class="liveChartContain">
-                <canvas id="network-graph1" style="width:600px; height:180px"></canvas>
+            <!-- Page 2 -->
+            <div class="slide-page" style="display: none;">
+                <div class="slide-page-title"></div>
+                <div class="gridContainer">
+                </div>
             </div>
         </div>
 
-        <!-- 1 x 2 -->
- 
+        <button class="slide-button" onclick="changePage(1)">&#10095;</button>
+
     </div>
 </body>
 
 <script>
-    // var systemIntervalId;
-    var cpuIntervalId;
-    var memroyIntervalId;
-    var diskIntervalId;
-    var networkIntervalId;
-    var documentHidden = false;
-
     window.onload = function () {
-        var gridItemArray = document.getElementsByClassName('gridItem');
-        // var gridItemLength = gridItemArray.length;
-        
-        document.getElementById('grid-container').innerHTML += createGridItemHtml(gridItemArray.length);
 
+        // Page 1
+        addMonitoring('ALARM', 'control');
+        addMonitoring('Repository', 'control');
+        // addMonitoring('Archive', 'control');
+        // addMonitoring('Web', 'control');
+        // addMonitoring('Gateway', 'control');
+        // addMonitoring('NAS', 'control');
 
-        // document.getElementById('system-name1').innerText = SERVICE_NAME;
+        // Page 2
+        // addMonitoring('ALARM', 'control');
+        // addMonitoring('Repository', 'control');
+        // addMonitoring('Archive', 'control');
 
-        // var cpuChartID = document.getElementById('cpu-chart1');
-        // cpuChartID.style.strokeDashoffset = '330';
-
-        // var memoryChartID = document.getElementById('memory-chart1');
-        // memoryChartID.style.strokeDashoffset = '446';
-
-        // var diskChartID = document.getElementById('disk-chart1');
-        // diskChartID.style.strokeDashoffset = '565';
-
-        // monitoringCPU();
-        // monitoringMemory();
-        // monitoringDisk();
-        // monitoringNetwork();
-
-        // var networkGraphContect = document.getElementById('network-graph1').getContext('2d');
-        // window.networkGraph = new Chart(networkGraphContect, networkChartConfig);
-
-        // cpuIntervalId = setInterval(monitoringCPU, 5000);
-        // memroyIntervalId = setInterval(monitoringMemory, 5000);
-        // diskIntervalId = setInterval(monitoringDisk, 10000);
-        // networkIntervalId = setInterval(monitoringNetwork, 1000);
-
-
-        // gridItemLength = gridItemArray.length;
-        // gridItemHtml = createGridItemHtml(gridItemLength);
-        // document.getElementById('grid-container').innerHTML += gridItemHtml;
     }
     document.addEventListener('visibilitychange', function () {
         if (document.hidden) {
@@ -157,4 +89,3 @@
 </script>
 
 </html>
-
