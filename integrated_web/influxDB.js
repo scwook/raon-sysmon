@@ -355,8 +355,8 @@ function monitoringNetwork(sendId, receiveId, count) {
             document.getElementById(sendValueId).innerText = unitTrafficSend.value.toFixed(1) + unitTrafficSend.unit + '/s';
             document.getElementById(receiveValueId).innerText = unitTrafficReceive.value.toFixed(1) + unitTrafficReceive.unit + '/s';
 
-            networkValueArray[dataCount].send = trafficReceive;
-            networkValueArray[dataCount].receive = trafficSend;
+            networkValueArray[dataCount].send = trafficSend;
+            networkValueArray[dataCount].receive = trafficReceive;
         }
     };
 

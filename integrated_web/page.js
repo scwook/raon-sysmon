@@ -26,15 +26,15 @@ function createGridItemHtml(count, title) {
         + count + '" class="doughnutChartText">0</div> \
 <div class="networkValueContain"> \
     <svg width="24" height="24"> \
-        <line x1="12" y1="0" x2="12" y2="13.6" style="fill:none;stroke:rgb(153, 102, 255);stroke-width:4;stroke-miterlimit:10;" /> \
-        <polygon points="4.8,11.5 12,24 19.2,11.5 " style="fill:rgb(153, 102, 255);" /> \
+    <line x1="12" y1="24" x2="12" y2="10.3" style="fill:none;stroke:rgb(153, 102, 255);stroke-width:4;stroke-miterlimit:10;" /> \
+    <polygon points="19.2,12.4 12,0 4.8,12.4 " style="fill:rgb(153, 102, 255);" /> \
     </svg> \
     <div id="network-send-value'
         + count + '" class="networkValue">0</div> \
     <div style="width:10px;"></div> \
     <svg width="24" height="24"> \
-        <line x1="12" y1="24" x2="12" y2="10.3" style="fill:none;stroke:rgb(255, 205, 86);stroke-width:4;stroke-miterlimit:10;" /> \
-        <polygon points="19.2,12.4 12,0 4.8,12.4 " style="fill:rgb(255, 205, 86);" /> \
+    <line x1="12" y1="0" x2="12" y2="13.6" style="fill:none;stroke:rgb(255, 205, 86);stroke-width:4;stroke-miterlimit:10;" /> \
+    <polygon points="4.8,11.5 12,24 19.2,11.5 " style="fill:rgb(255, 205, 86);" /> \
     </svg> \
     <div id="network-receive-value'
         + count + '" class="networkValue">0</div> \
@@ -103,10 +103,11 @@ function addMonitoring(title, buckName) {
     cpuIntervalId = setInterval(monitoringCPU, 5000, cpuValueId, cpuChartId, count);
     memroyIntervalId = setInterval(monitoringMemory, 5000, memoryChartId, count);
     diskIntervalId = setInterval(monitoringDisk, 10000, diskChartId, count);
-    networkIntervalId = setInterval(monitoringNetwork, 3000, networkSendId, networkReceiveId, count);
+    networkIntervalId = setInterval(monitoringNetwork, 1000, networkSendId, networkReceiveId, count);
 
     setTimeout(function () {
-        new Chart(document.getElementById(networkGraphId).getContext('2d'), networkChartConfig);
+        new Chart(document.getElementById(networkGraphId).getContext('2d'), createChartConfig());
+
     }, 1000);
 
 }

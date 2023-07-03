@@ -1,5 +1,5 @@
 // InfluxDB Server Address
-var SERVER_ADDR = "http://192.168.60.123:8086"
+var SERVER_ADDR = "http://192.168.0.99:8086"
 
 // InfluxDB Authorization Token
 var INFLUXDB_TOKEN = "";

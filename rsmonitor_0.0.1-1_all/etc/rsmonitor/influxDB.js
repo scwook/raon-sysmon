@@ -229,35 +229,6 @@ function changeUnit(byteValue) {
     return { value: calValue, unit: calUnit }
 }
 
-function monitoringSystem() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-
-            let data = this.responseText.split(",");
-            let uptimeIndex = data.indexOf("uptime") - 1;
-            let nCPUsIndex = data.indexOf("n_cpus") - 1;
-
-            let uptime = parseInt(data[uptimeIndex]);
-            let ncpu = parseInt(data[nCPUsIndex]);
-
-            document.getElementById('system-uptime').innerText = Math.floor(uptime / 3600) + 'h';
-            document.getElementById('cpu-core').innerText = ncpu + 'Core';
-
-        }
-    };
-
-    xhttp.open('POST', queryString, true);
-
-    xhttp.setRequestHeader('Content-Type', 'application/json');
-    xhttp.setRequestHeader("Authorization", "Token " + influxDBToken)
-    xhttp.send(JSON.stringify(queryData.system));
-
-    let date = new Date();
-    let isoTime = date.toISOString().replace('Z', timezone);
-    queryData.cpu.now = isoTime;
-}
-
 function monitoringCPU() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
