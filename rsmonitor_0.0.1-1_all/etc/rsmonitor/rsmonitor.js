@@ -82,7 +82,7 @@ var app = http.createServer(function(request, response){
             response.end();
         });
     }
-    else if(request.url==='/images/background1.png'){
+    else if(request.url==='/images/background6.png'){
         fs.readFile(__dirname + '/images/background1.png', function(err, data){
             console.log('background1.png loading...');
             response.writeHead(200);
@@ -108,4 +108,4 @@ var app = http.createServer(function(request, response){
     }
 
 });
-app.listen(8080);
+app.listen(9009);

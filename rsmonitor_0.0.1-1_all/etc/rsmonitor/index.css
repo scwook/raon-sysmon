@@ -2,11 +2,6 @@
     --background-image-top: 0px;
 }
 
-/* @font-face {
-    font-family: "Helvetica-Neue-Light";
-    src: url(fonts/helveticaneue/HelveticaNeueLight.ttf);
-} */
-
 @font-face {
     font-family: "Roboto-Thin";
     src: url(fonts/Roboto-Thin.ttf);
@@ -16,22 +11,16 @@
     font-family: "Roboto-Light";
     src: url(fonts/Roboto-Light.ttf);
 }
-/* 
-@font-face {
-    font-family: "NotoSansKR-Thin";
-    src: url(fonts/NotoSansKR-Thin.otf);
-} */
 
 body {
     margin: 0px;
     background-color: black;
-    background-image: url('images/background1.png');
+    background-image: url('images/background6.png');
     background-repeat: no-repeat;
     background-position: center var(--background-image-top);
     font-family: "Roboto-Thin";
     overflow: hidden;
 }
-
 
 #time-stamp {
     position: absolute;
@@ -116,7 +105,7 @@ body {
     top: 80px;
     grid-template-columns: 400px 400px 400px;
     grid-template-rows: 500px 300px;
-    gap: 20px 20px;
+    gap: 40px 40px;
     width: 1280px;
     height: 860px;
     /* border-style: dotted;
@@ -180,7 +169,7 @@ body {
     width: 100%;
     top: 130px;
     color: white;
-    font-size: 42px;
+    font-size: 38px;
     text-align: center;
 }
 

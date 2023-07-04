@@ -15,7 +15,7 @@
 body {
     margin: 0px;
     background-color: black;
-    background-image: url('images/background1.png');
+    background-image: url('images/background6.png');
     background-repeat: no-repeat;
     background-position: center var(--background-image-top);
     font-family: "Roboto-Thin";
@@ -169,7 +169,7 @@ body {
     width: 100%;
     top: 130px;
     color: white;
-    font-size: 42px;
+    font-size: 38px;
     text-align: center;
 }
 
