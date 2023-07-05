@@ -292,7 +292,7 @@ function monitoringMemory() {
         if (this.readyState == 4 && this.status == 200) {
 
             let data = this.responseText.split(",");
-            
+
             let memoryTotalIndex = data.indexOf("total") - 1;
             let memoryUsedIndex = data.indexOf("used") - 1;
             let memoryPercentIndex = data.indexOf("used_percent") - 1;
@@ -338,15 +338,15 @@ function monitoringDisk() {
             let used = 0;
 
             let index = -1;
-            while(true) {
+            while (true) {
                 index = data.indexOf('total', index + 1);
-                if(index == -1) break;
+                if (index == -1) break;
                 total += parseInt(data[index - 1]);
             }
-            
-            while(true) {
+
+            while (true) {
                 index = data.indexOf('used', index + 1);
-                if(index == -1) break;
+                if (index == -1) break;
                 used += parseInt(data[index - 1]);
             }
 
@@ -383,24 +383,49 @@ function monitoringNetwork() {
         if (this.readyState == 4 && this.status == 200) {
 
             let data = this.responseText.split(",");
-            // console.log(data);
-            let sendIndex1 = data.indexOf('bytes_sent');
-            let sendIndex2 = data.indexOf('bytes_sent', sendIndex1 + 1);
+            let sendDataArray = [];
+            let receiveDataArray = [];
 
-            let receiveIndex1 = data.indexOf('bytes_recv');
-            let receiveIndex2 = data.indexOf('bytes_recv', receiveIndex1 + 1);
+            let index = -1;
+            while (true) {
+                index = data.indexOf('bytes_sent', index + 1);
+                if (index == -1) break;
 
-            let send1 = parseInt(data[sendIndex1-1]);
-            let send2 = parseInt(data[sendIndex2-1]);
+                sendDataArray[sendDataArray.length] = {
+                    'device': data[index + 3],
+                    'value': [data[index - 1]]
+                };
+            }
 
-            let receive1 = parseInt(data[receiveIndex1-1]);
-            let receive2 = parseInt(data[receiveIndex2-1]);
+            while (true) {
+                index = data.indexOf('bytes_recv', index + 1);
+                if (index == -1) break;
 
-            let trafficSend = send2 - send1;
-            let trafficReceive = receive2 - receive1;
+                receiveDataArray[receiveDataArray.length] = {
+                    'device': data[index + 3],
+                    'value': [data[index - 1]]
+                };
+            }
 
-            let unitTrafficReceive = changeUnit(trafficReceive);
+            let sendTotal1 = 0;
+            let sendTotal2 = 0;
+            for (let i = 0; i < sendDataArray.length; i += 2) {
+                sendTotal1 += parseInt(sendDataArray[i].value);
+                sendTotal2 += parseInt(sendDataArray[i + 1].value);
+            }
+
+            let receiveTotal1 = 0;
+            let receiveTotal2 = 0;
+            for (let i = 0; i < receiveDataArray.length; i += 2) {
+                receiveTotal1 += parseInt(receiveDataArray[i].value);
+                receiveTotal2 += parseInt(receiveDataArray[i + 1].value);
+            }
+
+            let trafficSend = sendTotal2 - sendTotal1;
+            let trafficReceive = receiveTotal2 - receiveTotal1;
+
             let unitTrafficSend = changeUnit(trafficSend);
+            let unitTrafficReceive = changeUnit(trafficReceive);
 
             document.getElementById('network-send-value').innerText = unitTrafficSend.value.toFixed(1) + unitTrafficSend.unit + '/s';
             document.getElementById('network-receive-value').innerText = unitTrafficReceive.value.toFixed(1) + unitTrafficReceive.unit + '/s';
@@ -408,8 +433,8 @@ function monitoringNetwork() {
             networkSendValue = trafficSend;
             networkReceiveValue = trafficReceive;
 
-            let date = new Date(data[sendIndex1-2]);
-            
+            let date = new Date(data[data.indexOf('bytes_sent') - 2]);
+
             document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
             document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
         }

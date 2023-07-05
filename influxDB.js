@@ -3,8 +3,7 @@ var bucket = BUCKET;
 var dataIOendpoint = "/api/v2/query?org=" + ORGANIZATION;
 var queryString = serverAddr + dataIOendpoint;
 
-var influxDBToken = INFLUXDB_TOKEN; //RAON
-// var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
+var influxDBToken = INFLUXDB_TOKEN;
 
 var date = new Date();
 var timezone = "+00:00";
@@ -424,20 +423,6 @@ function monitoringNetwork() {
             
             let trafficSend = sendTotal2 - sendTotal1;
             let trafficReceive = receiveTotal2 - receiveTotal1;
-            // let sendIndex1 = data.indexOf('bytes_sent');
-            // let sendIndex2 = data.indexOf('bytes_sent', sendIndex1 + 1);
-
-            // let receiveIndex1 = data.indexOf('bytes_recv');
-            // let receiveIndex2 = data.indexOf('bytes_recv', receiveIndex1 + 1);
-
-            // let send1 = parseInt(data[sendIndex1-1]);
-            // let send2 = parseInt(data[sendIndex2-1]);
-
-            // let receive1 = parseInt(data[receiveIndex1-1]);
-            // let receive2 = parseInt(data[receiveIndex2-1]);
-
-            // let trafficSend = send2 - send1;
-            // let trafficReceive = receive2 - receive1;
 
             let unitTrafficSend = changeUnit(trafficSend);
             let unitTrafficReceive = changeUnit(trafficReceive);

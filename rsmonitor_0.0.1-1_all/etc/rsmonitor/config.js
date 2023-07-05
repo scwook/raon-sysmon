@@ -8,7 +8,7 @@ var INFLUXDB_TOKEN = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjn
 var ORGANIZATION = "raon";
 
 // InfluxDB Bucket
-var BUCKET = "control";
+var BUCKET = "";
 
 // Server Location or Server Name(This text will be expressed on the webpage at right top)
 var SERVER_NAME = "SR0104"

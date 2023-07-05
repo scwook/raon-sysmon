@@ -2,8 +2,7 @@ var serverAddr = SERVER_ADDR;
 var dataIOendpoint = "/api/v2/query?org=" + ORGANIZATION;
 var queryString = serverAddr + dataIOendpoint;
 
-// var influxDBToken = "6dXJhSSVJ-uQWlZ9qhsza_jW52IS5qe7s_BIxQqAw99FuqWOeR5lPJ4mjnIfgMxLfLGVVq69uH6_KU1EHzKsWw=="; //RAON
-var influxDBToken = "6UyxcltMVociLrcCamGD1XzbfoQ5OSV4xjIU2waBfLM7fkfj6kRN0lNWIfgGl7PhXU5TfY33RvjgS0LaCWdfog=="; //HOME
+var influxDBToken = INFLUXDB_TOKEN;
 
 var date = new Date();
 var timezone = "+00:00";
@@ -333,21 +332,61 @@ function monitoringNetwork(sendId, receiveId, count) {
         if (this.readyState == 4 && this.status == 200) {
 
             let data = this.responseText.split(",");
+            let sendDataArray = [];
+            let receiveDataArray = [];
 
-            let sendIndex1 = data.indexOf('bytes_sent');
-            let sendIndex2 = data.indexOf('bytes_sent', sendIndex1 + 1);
+            let index = -1;
+            while(true) {
+                index = data.indexOf('bytes_sent', index + 1);
+                if(index == -1) break;
+                
+                sendDataArray[sendDataArray.length] = {
+                    'device' : data[index+3],
+                    'value' : [data[index-1]]
+                };
+            }
 
-            let receiveIndex1 = data.indexOf('bytes_recv');
-            let receiveIndex2 = data.indexOf('bytes_recv', receiveIndex1 + 1);
+            while(true) {
+                index = data.indexOf('bytes_recv', index + 1);
+                if(index == -1) break;
+                
+                receiveDataArray[receiveDataArray.length] = {
+                    'device' : data[index+3],
+                    'value' : [data[index-1]]
+                };
+            }
 
-            let send1 = parseInt(data[sendIndex1 - 1]);
-            let send2 = parseInt(data[sendIndex2 - 1]);
+            let sendTotal1 = 0;
+            let sendTotal2 = 0;
+            for(let i = 0; i < sendDataArray.length; i+=2) {
+                sendTotal1 += parseInt(sendDataArray[i].value);
+                sendTotal2 += parseInt(sendDataArray[i+1].value);
+            }
+            
+            let receiveTotal1 = 0;
+            let receiveTotal2 = 0;
+            for(let i = 0; i < receiveDataArray.length; i+=2) {
+                receiveTotal1 += parseInt(receiveDataArray[i].value);
+                receiveTotal2 += parseInt(receiveDataArray[i+1].value);
+            }
 
-            let receive1 = parseInt(data[receiveIndex1 - 1]);
-            let receive2 = parseInt(data[receiveIndex2 - 1]);
+            // let sendIndex1 = data.indexOf('bytes_sent');
+            // let sendIndex2 = data.indexOf('bytes_sent', sendIndex1 + 1);
 
-            let trafficSend = send2 - send1;
-            let trafficReceive = receive2 - receive1;
+            // let receiveIndex1 = data.indexOf('bytes_recv');
+            // let receiveIndex2 = data.indexOf('bytes_recv', receiveIndex1 + 1);
+
+            // let send1 = parseInt(data[sendIndex1 - 1]);
+            // let send2 = parseInt(data[sendIndex2 - 1]);
+
+            // let receive1 = parseInt(data[receiveIndex1 - 1]);
+            // let receive2 = parseInt(data[receiveIndex2 - 1]);
+
+            // let trafficSend = send2 - send1;
+            // let trafficReceive = receive2 - receive1;
+
+            let trafficSend = sendTotal2 - sendTotal1;
+            let trafficReceive = receiveTotal2 - receiveTotal1;
 
             let unitTrafficReceive = changeUnit(trafficReceive);
             let unitTrafficSend = changeUnit(trafficSend);

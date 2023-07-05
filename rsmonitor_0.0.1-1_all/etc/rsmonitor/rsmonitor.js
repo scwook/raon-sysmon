@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/nodejs
 var http = require('http');
 var fs = require('fs');
 
@@ -83,7 +83,7 @@ var app = http.createServer(function(request, response){
         });
     }
     else if(request.url==='/images/background6.png'){
-        fs.readFile(__dirname + '/images/background1.png', function(err, data){
+        fs.readFile(__dirname + '/images/background6.png', function(err, data){
             console.log('background1.png loading...');
             response.writeHead(200);
             response.write(data);
