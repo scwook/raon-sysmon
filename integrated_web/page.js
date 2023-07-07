@@ -103,7 +103,7 @@ function addMonitoring(title, buckName) {
     cpuIntervalId = setInterval(monitoringCPU, 5000, cpuValueId, cpuChartId, count);
     memroyIntervalId = setInterval(monitoringMemory, 5000, memoryChartId, count);
     diskIntervalId = setInterval(monitoringDisk, 10000, diskChartId, count);
-    networkIntervalId = setInterval(monitoringNetwork, 1000, networkSendId, networkReceiveId, count);
+    networkIntervalId = setInterval(monitoringNetwork, 3000, networkSendId, networkReceiveId, count);
 
     setTimeout(function () {
         new Chart(document.getElementById(networkGraphId).getContext('2d'), createChartConfig());
