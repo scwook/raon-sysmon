@@ -52,8 +52,8 @@ function createChartConfig() {
                     type: 'realtime',
                     realtime: {
                         duration: 300000,
-                        refresh: 3000,
-                        delay: 2000,
+                        refresh: 5000,
+                        delay: 5000,
                         onRefresh: networkDataRefresh,
                     },
                     gridLines: {

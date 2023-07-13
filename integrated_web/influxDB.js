@@ -1,6 +1,6 @@
-var serverAddr = SERVER_ADDR;
+var influxDbAddr = INFLUXDB_ADDR;
 var dataIOendpoint = "/api/v2/query?org=" + ORGANIZATION;
-var queryString = serverAddr + dataIOendpoint;
+var queryString = influxDbAddr + dataIOendpoint;
 
 var influxDBToken = INFLUXDB_TOKEN;
 
@@ -32,7 +32,7 @@ function createInfluxDBQuery(bucketName) {
     |> last()';
 
     var diskQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
-    |> range(start: -10s) \
+    |> range(start: -60s) \
     |> filter(fn: (r) => r["_measurement"] == "disk") \
     |> filter(fn: (r) => r["_field"] == "used_percent" or r["_field"] == "used" or r["_field"] == "total" ) \
     |> last()';
@@ -370,23 +370,8 @@ function monitoringNetwork(sendId, receiveId, count) {
                 receiveTotal2 += parseInt(receiveDataArray[i+1].value);
             }
 
-            // let sendIndex1 = data.indexOf('bytes_sent');
-            // let sendIndex2 = data.indexOf('bytes_sent', sendIndex1 + 1);
-
-            // let receiveIndex1 = data.indexOf('bytes_recv');
-            // let receiveIndex2 = data.indexOf('bytes_recv', receiveIndex1 + 1);
-
-            // let send1 = parseInt(data[sendIndex1 - 1]);
-            // let send2 = parseInt(data[sendIndex2 - 1]);
-
-            // let receive1 = parseInt(data[receiveIndex1 - 1]);
-            // let receive2 = parseInt(data[receiveIndex2 - 1]);
-
-            // let trafficSend = send2 - send1;
-            // let trafficReceive = receive2 - receive1;
-
-            let trafficSend = sendTotal2 - sendTotal1;
-            let trafficReceive = receiveTotal2 - receiveTotal1;
+            let trafficSend = (sendTotal2 - sendTotal1) / 5;
+            let trafficReceive = (receiveTotal2 - receiveTotal1) /5;
 
             let unitTrafficReceive = changeUnit(trafficReceive);
             let unitTrafficSend = changeUnit(trafficSend);
