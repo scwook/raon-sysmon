@@ -123,7 +123,7 @@ var memoryChartConfig = {
                 type: 'realtime',
                 realtime: {
                     duration: 300000,
-                    refresh: 5000,
+                    refresh: 10000,
                     delay: 5000,
                     onRefresh: memoryDataRefresh
                 },
@@ -198,8 +198,8 @@ var diskChartConfig = {
                 type: 'realtime',
                 realtime: {
                     duration: 300000,
-                    refresh: 1000,
-                    delay: 2000,
+                    refresh: 10000,
+                    delay: 5000,
                     onRefresh: diskDataRefresh
                 },
                 gridLines: {
@@ -273,8 +273,8 @@ var networkChartConfig = {
                 type: 'realtime',
                 realtime: {
                     duration: 300000,
-                    refresh: 1000,
-                    delay: 2000,
+                    refresh: 5000,
+                    delay: 5000,
                     onRefresh: networkDataRefresh,
                 },
                 gridLines: {

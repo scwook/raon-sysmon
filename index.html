@@ -161,7 +161,29 @@
     var networkIntervalId;
     var documentHidden = false;
 
+    let serverAddr = SERVER_ADDR;
+    let timestampURL = serverAddr + '/timestamp';
+
+    setInterval(function () {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                let date = new Date(this.responseText);
+    
+                document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
+                document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
+            }
+        };
+
+        xhttp.open('GET', timestampURL, true);
+        xhttp.send();
+
+    }, 1000);
+
     window.onload = function () {
+
         document.getElementById('system-info').innerText = SERVER_NAME + ' ' + SERVICE_NAME;
 
         var cpuChartID = document.getElementById('cpu-chart');
@@ -193,9 +215,9 @@
 
         systemIntervalId = setInterval(monitoringSystem, 60000);
         cpuIntervalId = setInterval(monitoringCPU, 5000);
-        memroyIntervalId = setInterval(monitoringMemory, 5000);
-        diskIntervalId = setInterval(monitoringDisk, 10000);
-        networkIntervalId = setInterval(monitoringNetwork, 1000);
+        memroyIntervalId = setInterval(monitoringMemory, 10000);
+        diskIntervalId = setInterval(monitoringDisk, 60000);
+        networkIntervalId = setInterval(monitoringNetwork, 5000);
     }
 
     document.addEventListener('visibilitychange', function () {

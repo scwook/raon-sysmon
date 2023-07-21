@@ -63,18 +63,19 @@
 <script>
     window.onload = function () {
 
+        // addMonitoring('System Name', 'Buck Name')
         // Page 1 
-        addMonitoring('GATEWAY1', 'GATEWAY1');
-        addMonitoring('GATEWAY2', 'GATEWAY2');
+        addMonitoring('GATEWAY1', 'SCL3_GATEWAY1');
+        addMonitoring('GATEWAY2', 'SCL3_GATEWAY2');
         addMonitoring('Archvie1', 'AA1');
         addMonitoring('Archive2', 'AA2');
-        addMonitoring('Repository', 'REPOSITORY');
+        // addMonitoring('Repository', 'REPOSITORY');
         addMonitoring('NTP', 'NTP');
 
         // Page 2
-        addMonitoring('Backup1', 'BACKUP1');
-        addMonitoring('Backup2', 'BACKUP2');
-        addMonitoring('NAS', 'NAS');
+        addMonitoring('Backup1', 'CTRL_BACKUP1');
+        addMonitoring('Backup2', 'CTRL_BACKUP2');
+        addMonitoring('NAS', 'OPERATOR_NAS');
 
     }
     document.addEventListener('visibilitychange', function () {

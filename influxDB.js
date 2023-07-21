@@ -1,7 +1,7 @@
-var serverAddr = SERVER_ADDR;
+var influxDbAddr = INFLUXDB_ADDR;
 var bucket = BUCKET;
 var dataIOendpoint = "/api/v2/query?org=" + ORGANIZATION;
-var queryString = serverAddr + dataIOendpoint;
+var queryString = influxDbAddr + dataIOendpoint;
 
 var influxDBToken = INFLUXDB_TOKEN;
 
@@ -17,7 +17,7 @@ const TByte = GByte * 1000;
 const PByte = TByte * 1000;
 
 var systemQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
-|> range(start: -10s) \
+|> range(start: -60s) \
 |> filter(fn: (r) => r["_measurement"] == "system") \
 |> filter(fn: (r) => r["_field"] == "uptime" or r["_field"] == "n_cpus") \
 |> last()';
@@ -36,7 +36,7 @@ var memoryQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
 |> last()';
 
 var diskQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
-|> range(start: -10s) \
+|> range(start: -60s) \
 |> filter(fn: (r) => r["_measurement"] == "disk") \
 |> filter(fn: (r) => r["_field"] == "used_percent" or r["_field"] == "used" or r["_field"] == "total" ) \
 |> last()';
@@ -305,7 +305,7 @@ function monitoringMemory() {
             let unitDataUsed = changeUnit(used);
 
             document.getElementById('memory-value').innerText = unitDataUsed.value.toFixed(1) + unitDataUsed.unit;
-            document.getElementById('memory-total').innerText = unitDataTotal.value.toFixed(1) + unitDataTotal.unit;
+            document.getElementById('memory-total').innerText = unitDataTotal.value .toFixed(1) + unitDataTotal.unit;
 
             memoryCurrentValue = unitDataUsed.value.toFixed(1);
 
@@ -421,8 +421,9 @@ function monitoringNetwork() {
                 receiveTotal2 += parseInt(receiveDataArray[i+1].value);
             }
             
-            let trafficSend = sendTotal2 - sendTotal1;
-            let trafficReceive = receiveTotal2 - receiveTotal1;
+            // divide refresh rate
+            let trafficSend = (sendTotal2 - sendTotal1) / 5; 
+            let trafficReceive = (receiveTotal2 - receiveTotal1) / 5;
 
             let unitTrafficSend = changeUnit(trafficSend);
             let unitTrafficReceive = changeUnit(trafficReceive);
@@ -432,11 +433,6 @@ function monitoringNetwork() {
 
             networkSendValue = trafficSend;
             networkReceiveValue = trafficReceive;
-
-            let date = new Date(data[data.indexOf('bytes_sent') - 2]);
-            
-            document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
-            document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
         }
     };
 
