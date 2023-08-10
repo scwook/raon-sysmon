@@ -38,7 +38,7 @@ function createInfluxDBQuery(bucketName) {
     |> last()';
 
     var networkQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
-    |> range(start: -10s) \
+    |> range(start: -60s) \
     |> filter(fn: (r) => r["_measurement"] == "net") \
     |> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent") \
     |> limit(n:2, offset: 0)';
@@ -342,7 +342,7 @@ function monitoringNetwork(sendId, receiveId, count) {
                 
                 sendDataArray[sendDataArray.length] = {
                     'device' : data[index+3],
-                    'value' : [data[index-1]]
+                    'value' : data[index-1]
                 };
             }
 
@@ -352,9 +352,10 @@ function monitoringNetwork(sendId, receiveId, count) {
                 
                 receiveDataArray[receiveDataArray.length] = {
                     'device' : data[index+3],
-                    'value' : [data[index-1]]
+                    'value' : data[index-1]
                 };
             }
+
 
             let sendTotal1 = 0;
             let sendTotal2 = 0;
