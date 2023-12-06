@@ -23,14 +23,14 @@ var systemQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
 |> last()';
 
 var cpuQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
-|> range(start: -10s) \
+|> range(start: -60s) \
 |> filter(fn: (r) => r["_measurement"] == "cpu") \
 |> filter(fn: (r) => r["_field"] == "usage_system" or r["_field"] == "usage_user") \
 |> filter(fn: (r) => r["cpu"] == "cpu-total") \
 |> last()';
 
 var memoryQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
-|> range(start: -10s) \
+|> range(start: -60s) \
 |> filter(fn: (r) => r["_measurement"] == "mem") \
 |> filter(fn: (r) => r["_field"] == "used" or r["_field"] == "used_percent" or r["_field"] == "total") \
 |> last()';
@@ -42,7 +42,7 @@ var diskQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
 |> last()';
 
 var networkQuery = 'from(bucket: ' + '"' + bucket + '"' + ') \
-|> range(start: -10s) \
+|> range(start: -60s) \
 |> filter(fn: (r) => r["_measurement"] == "net") \
 |> filter(fn: (r) => r["_field"] == "bytes_recv" or r["_field"] == "bytes_sent") \
 |> limit(n:2, offset: 0)';

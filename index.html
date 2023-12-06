@@ -164,23 +164,23 @@
     let serverAddr = SERVER_ADDR;
     let timestampURL = serverAddr + '/timestamp';
 
-    setInterval(function () {
+    // setInterval(function () {
 
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
+    //     var xhttp = new XMLHttpRequest();
+    //     xhttp.onreadystatechange = function () {
+    //         if (this.readyState == 4 && this.status == 200) {
 
-                let date = new Date(this.responseText);
+    //             let date = new Date(this.responseText);
     
-                document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
-                document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
-            }
-        };
+    //             document.getElementById('timestamp-date').innerText = date.toLocaleDateString('en-CA');
+    //             document.getElementById('timestamp-time').innerText = ' ' + date.toLocaleTimeString('en-GB');
+    //         }
+    //     };
 
-        xhttp.open('GET', timestampURL, true);
-        xhttp.send();
+    //     xhttp.open('GET', timestampURL, true);
+    //     xhttp.send();
 
-    }, 1000);
+    // }, 1000);
 
     window.onload = function () {
 
